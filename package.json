@@ -1,0 +1,13 @@
+{
+  "name": "psadt-helper",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node test/commands.test.js"
+  },
+  "devDependencies": {
+    "vite": "^5.1.0"
+  }
+}

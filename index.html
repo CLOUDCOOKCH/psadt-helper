@@ -33,16 +33,37 @@
       </aside>
 
       <section class="content">
+        <div id="intro" class="intro">
+          <img src="assets/cloudcook-logo.png" alt="Cloudcook" class="intro-logo" onerror="this.classList.add('hidden')" />
+          <h2>Welcome to Cloudcook PSADT Helper! 👋</h2>
+          <p>Build and share <strong>PowerShell App Deployment Toolkit</strong> commands.</p>
+          <ol class="intro-steps">
+            <li>📋 Choose a scenario from the left.</li>
+            <li>📝 Fill in the required fields.</li>
+            <li>🚀 Click <strong>Add</strong> to queue it or <strong>Copy</strong> to grab the command.</li>
+          </ol>
+          <p>Happy deploying! 😊</p>
+        </div>
         <div id="scenario-details" class="card hidden"></div>
         <div id="output" class="card hidden">
           <div class="output-toolbar">
             <span class="output-title">Generated Command</span>
-            <button id="copy-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy</span></button>
+            <div style="display:flex;gap:8px">
+              <button id="add-btn" class="btn"><svg class="icon"><use href="#ic-play"/></svg><span>Add</span></button>
+              <button id="copy-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy</span></button>
+            </div>
           </div>
           <pre id="command" class="code"></pre>
         </div>
-        <div id="empty" class="empty">
-          <p>Select a scenario to begin.</p>
+        <div id="script" class="card hidden">
+          <div class="output-toolbar">
+            <span class="output-title">Script</span>
+            <div style="display:flex;gap:8px">
+              <button id="download-script-btn" class="btn"><svg class="icon"><use href="#ic-download"/></svg><span>Download</span></button>
+              <button id="copy-script-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy Script</span></button>
+            </div>
+          </div>
+          <pre id="script-commands" class="code"></pre>
         </div>
       </section>
 
