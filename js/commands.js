@@ -34,14 +34,16 @@ function toArrayLiteral(input) {
   return items.length ? `@(${items.join(',')})` : '';
 }
 
-// Build a Join-Path expression using a base variable (e.g., $adtSession.DirFiles)
+// Build an absolute path using a base variable (e.g., $adtSession.DirFiles)
 function joinPath(baseVar, relPath) {
   const base = baseVar && typeof baseVar === 'string' ? baseVar : '$adtSession.DirFiles';
-  const rel = psq(relPath || '');
-  return `Join-Path ${base} '${rel}'`;
+  const rel = String(relPath || '')
+    .replace(/`/g, '``')
+    .replace(/"/g, '`"');
+  return `"${base}\\${rel}"`;
 }
 
-// Build an array of Join-Path expressions from a comma/newline list
+// Build an array of absolute paths from a comma/newline list
 function joinPathArray(baseVar, listText) {
   if (!listText) return '';
   const base = baseVar && typeof baseVar === 'string' ? baseVar : '$adtSession.DirFiles';
@@ -49,7 +51,7 @@ function joinPathArray(baseVar, listText) {
     .split(/[\n,]/)
     .map(s => s.trim())
     .filter(Boolean)
-    .map(p => `(Join-Path ${base} '${psq(p)}')`);
+    .map(p => `"${base}\\${p.replace(/`/g, '``').replace(/"/g, '`"')}"`);
   return items.length ? `@(${items.join(', ')})` : '';
 }
 

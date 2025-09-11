@@ -69,7 +69,9 @@ body{
 .content{display:flex;flex-direction:column;gap:16px}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow: var(--shadow)}
 .hidden{display:none}
-.empty{color:var(--muted);text-align:center;padding:48px;border:1px dashed var(--border);border-radius:10px}
+.intro{color:var(--muted);text-align:center;padding:48px;border:1px dashed var(--border);border-radius:10px}
+.intro-logo{height:64px;width:auto;margin-bottom:16px}
+.intro-steps{max-width:400px;margin:16px auto;text-align:left}
 
 .form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form .field{display:flex;flex-direction:column;gap:6px}

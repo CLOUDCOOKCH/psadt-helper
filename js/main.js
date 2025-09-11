@@ -3,7 +3,7 @@
   const detailsEl = document.getElementById('scenario-details');
   const commandEl = document.getElementById('command');
   const outputEl = document.getElementById('output');
-  const emptyEl = document.getElementById('empty');
+  const introEl = document.getElementById('intro');
   const copyBtn = document.getElementById('copy-btn');
   const addBtn = document.getElementById('add-btn');
   const scriptEl = document.getElementById('script');
@@ -58,7 +58,7 @@
     const s = window.PSADT_SCENARIOS.find(x => x.id === id);
     if (!s) return;
 
-    emptyEl.classList.add('hidden');
+    introEl.classList.add('hidden');
     detailsEl.classList.remove('hidden');
     outputEl.classList.remove('hidden');
 

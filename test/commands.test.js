@@ -10,6 +10,9 @@ const cmd = msi.build({
   argumentList: '',
   logFileName: ''
 });
-assert.strictEqual(cmd, "Start-ADTMsiProcess -Action Install -FilePath Join-Path $adtSession.DirFiles 'app.msi' -ArgumentList '/qn'");
+assert.strictEqual(
+  cmd,
+  'Start-ADTMsiProcess -Action Install -FilePath "$adtSession.DirFiles\\app.msi" -ArgumentList \'/qn\''
+);
 
 console.log('All tests passed.');
