@@ -1,4 +1,22 @@
 // PSADT 4.1.x scenarios catalog. Each scenario defines fields and a build(values) -> string.
+/**
+ * @typedef {Object} Field
+ * @property {string} id
+ * @property {string} label
+ * @property {'text'|'textarea'|'select'|'multiselect'|'number'} type
+ * @property {boolean} [required]
+ * @property {string[]} [options]
+ * @property {boolean} [fileBase]
+ * @property {string} [placeholder]
+ */
+/**
+ * @typedef {Object} Scenario
+ * @property {string} id
+ * @property {string} name
+ * @property {string} description
+ * @property {Field[]} fields
+ * @property {(values:Object) => string} build
+ */
 
 function psq(s) {
   // PowerShell single-quote escaping
@@ -35,7 +53,7 @@ function joinPathArray(baseVar, listText) {
   return items.length ? `@(${items.join(', ')})` : '';
 }
 
-window.PSADT_SCENARIOS = [
+const PSADT_SCENARIOS = [
   // MSI operations via Start-ADTMsiProcess
   {
     id: 'msi-install',
@@ -279,6 +297,21 @@ window.PSADT_SCENARIOS = [
     }
   },
 
+  {
+    id: 'service-stop',
+    name: 'Service: Stop',
+    description: 'Stop-ServiceAndDependents for a Windows service.',
+    fields: [
+      { id: 'serviceName', label: 'Service Name', type: 'text', required: true, placeholder: 'Spooler' },
+      { id: 'timeout', label: 'Timeout (seconds)', type: 'number', required: false, placeholder: '30' }
+    ],
+    build: (v) => {
+      const parts = ["Stop-ServiceAndDependents", `-ServiceName '${psq(v.serviceName)}'`];
+      if (v.timeout) parts.push(`-Timeout ${v.timeout}`);
+      return parts.join(' ');
+    }
+  },
+
   // App blocking
   {
     id: 'block-apps',
@@ -315,3 +348,11 @@ window.PSADT_SCENARIOS = [
     }
   }
 ];
+
+if (typeof window !== 'undefined') {
+  window.PSADT_SCENARIOS = PSADT_SCENARIOS;
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = { PSADT_SCENARIOS };
+}
