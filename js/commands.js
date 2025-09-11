@@ -1,4 +1,22 @@
 // PSADT 4.1.x scenarios catalog. Each scenario defines fields and a build(values) -> string.
+/**
+ * @typedef {Object} Field
+ * @property {string} id
+ * @property {string} label
+ * @property {'text'|'textarea'|'select'|'multiselect'|'number'} type
+ * @property {boolean} [required]
+ * @property {string[]} [options]
+ * @property {boolean} [fileBase]
+ * @property {string} [placeholder]
+ */
+/**
+ * @typedef {Object} Scenario
+ * @property {string} id
+ * @property {string} name
+ * @property {string} description
+ * @property {Field[]} fields
+ * @property {(values:Object) => string} build
+ */
 
 function psq(s) {
   // PowerShell single-quote escaping
@@ -16,14 +34,16 @@ function toArrayLiteral(input) {
   return items.length ? `@(${items.join(',')})` : '';
 }
 
-// Build a Join-Path expression using a base variable (e.g., $adtSession.DirFiles)
+// Build an absolute path using a base variable (e.g., $adtSession.DirFiles)
 function joinPath(baseVar, relPath) {
   const base = baseVar && typeof baseVar === 'string' ? baseVar : '$adtSession.DirFiles';
-  const rel = psq(relPath || '');
-  return `Join-Path ${base} '${rel}'`;
+  const rel = String(relPath || '')
+    .replace(/`/g, '``')
+    .replace(/"/g, '`"');
+  return `"${base}\\${rel}"`;
 }
 
-// Build an array of Join-Path expressions from a comma/newline list
+// Build an array of absolute paths from a comma/newline list
 function joinPathArray(baseVar, listText) {
   if (!listText) return '';
   const base = baseVar && typeof baseVar === 'string' ? baseVar : '$adtSession.DirFiles';
@@ -31,11 +51,11 @@ function joinPathArray(baseVar, listText) {
     .split(/[\n,]/)
     .map(s => s.trim())
     .filter(Boolean)
-    .map(p => `(Join-Path ${base} '${psq(p)}')`);
+    .map(p => `"${base}\\${p.replace(/`/g, '``').replace(/"/g, '`"')}"`);
   return items.length ? `@(${items.join(', ')})` : '';
 }
 
-window.PSADT_SCENARIOS = [
+const PSADT_SCENARIOS = [
   // MSI operations via Start-ADTMsiProcess
   {
     id: 'msi-install',
@@ -279,6 +299,21 @@ window.PSADT_SCENARIOS = [
     }
   },
 
+  {
+    id: 'service-stop',
+    name: 'Service: Stop',
+    description: 'Stop-ServiceAndDependents for a Windows service.',
+    fields: [
+      { id: 'serviceName', label: 'Service Name', type: 'text', required: true, placeholder: 'Spooler' },
+      { id: 'timeout', label: 'Timeout (seconds)', type: 'number', required: false, placeholder: '30' }
+    ],
+    build: (v) => {
+      const parts = ["Stop-ServiceAndDependents", `-ServiceName '${psq(v.serviceName)}'`];
+      if (v.timeout) parts.push(`-Timeout ${v.timeout}`);
+      return parts.join(' ');
+    }
+  },
+
   // App blocking
   {
     id: 'block-apps',
@@ -315,3 +350,11 @@ window.PSADT_SCENARIOS = [
     }
   }
 ];
+
+if (typeof window !== 'undefined') {
+  window.PSADT_SCENARIOS = PSADT_SCENARIOS;
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = { PSADT_SCENARIOS };
+}
