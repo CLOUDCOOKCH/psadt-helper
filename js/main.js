@@ -9,7 +9,6 @@
   const scriptEl = document.getElementById('script');
   const scriptCommandsEl = document.getElementById('script-commands');
   const copyScriptBtn = document.getElementById('copy-script-btn');
-  const searchEl = document.getElementById('search');
   const accentEl = document.getElementById('accent');
   const swatchesEl = document.getElementById('accent-swatches');
   const bgEl = document.getElementById('background');
@@ -20,12 +19,9 @@
 
   const initialState = new URLSearchParams(location.hash.slice(1));
 
-  function renderList(filter = ''){
+  function renderList(){
     listEl.innerHTML = '';
-    const f = filter.trim().toLowerCase();
-    const scenarios = window.PSADT_SCENARIOS.filter(s =>
-      !f || s.name.toLowerCase().includes(f) || (s.description||'').toLowerCase().includes(f) || s.id.includes(f)
-    );
+    const scenarios = window.PSADT_SCENARIOS;
     scenarios.forEach(s => {
       const item = document.createElement('div');
       item.className = 'scenario-item' + (activeId === s.id ? ' active' : '');
@@ -47,14 +43,14 @@
     if (!scenarios.length){
       const none = document.createElement('div');
       none.className = 'scenario-item';
-      none.textContent = 'No scenarios match your search.';
+      none.textContent = 'No scenarios available.';
       listEl.appendChild(none);
     }
   }
 
   function selectScenario(id, preset = {}){
     activeId = id;
-    renderList(searchEl.value);
+    renderList();
     const s = window.PSADT_SCENARIOS.find(x => x.id === id);
     if (!s) return;
 
@@ -267,15 +263,6 @@
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   });
-  searchEl.addEventListener('input', () => renderList(searchEl.value));
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === '/' && document.activeElement !== searchEl){
-      e.preventDefault();
-      searchEl.focus();
-    }
-  });
-
   // Initial render
   renderList();
   if (initialState.get('scenario')){
