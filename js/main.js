@@ -3,8 +3,12 @@
   const detailsEl = document.getElementById('scenario-details');
   const commandEl = document.getElementById('command');
   const outputEl = document.getElementById('output');
-  const emptyEl = document.getElementById('empty');
+  const introEl = document.getElementById('intro');
   const copyBtn = document.getElementById('copy-btn');
+  const addBtn = document.getElementById('add-btn');
+  const scriptEl = document.getElementById('script');
+  const scriptCommandsEl = document.getElementById('script-commands');
+  const copyScriptBtn = document.getElementById('copy-script-btn');
   const searchEl = document.getElementById('search');
   const accentEl = document.getElementById('accent');
   const swatchesEl = document.getElementById('accent-swatches');
@@ -12,6 +16,9 @@
   const bgSwatchesEl = document.getElementById('bg-swatches');
 
   let activeId = null;
+  const scriptCommands = [];
+
+  const initialState = new URLSearchParams(location.hash.slice(1));
 
   function renderList(filter = ''){
     listEl.innerHTML = '';
@@ -45,13 +52,13 @@
     }
   }
 
-  function selectScenario(id){
+  function selectScenario(id, preset = {}){
     activeId = id;
     renderList(searchEl.value);
     const s = window.PSADT_SCENARIOS.find(x => x.id === id);
     if (!s) return;
 
-    emptyEl.classList.add('hidden');
+    introEl.classList.add('hidden');
     detailsEl.classList.remove('hidden');
     outputEl.classList.remove('hidden');
 
@@ -94,7 +101,7 @@
           if (idx === 0) return; // ignore helper first
           const o = document.createElement('option'); o.value = opt; o.textContent = opt; baseSel.appendChild(o);
         });
-        baseSel.value = '$adtSession.DirFiles';
+        baseSel.value = preset[`${field.id}Base`] || '$adtSession.DirFiles';
         baseSel.addEventListener('change', () => updateCommand());
         row.appendChild(baseSel);
         container = row;
@@ -149,6 +156,14 @@
         wrap.appendChild(input);
       }
       form.appendChild(wrap);
+      const presetVal = preset[field.id];
+      if (presetVal !== undefined){
+        if (field.type === 'multiselect' && Array.isArray(presetVal) && input instanceof HTMLSelectElement){
+          Array.from(input.options).forEach(o => { o.selected = presetVal.includes(o.value); });
+        } else {
+          input.value = presetVal;
+        }
+      }
     });
 
     detailsEl.appendChild(form);
@@ -173,14 +188,30 @@
       return values;
     }
 
+    function updateHash(v){
+      const params = new URLSearchParams({ scenario: s.id });
+      Object.entries(v).forEach(([k,val]) => {
+        if (!val) return;
+        params.set(k, Array.isArray(val) ? val.join(',') : val);
+      });
+      location.hash = params.toString();
+    }
+
     function updateCommand(){
       const values = getValues();
+      const missing = s.fields.filter(f => f.required && !values[f.id]);
+      if (missing.length){
+        commandEl.textContent = `// Missing: ${missing.map(m => m.label).join(', ')}`;
+        updateHash(values);
+        return;
+      }
       try {
         const cmd = s.build(values);
         commandEl.textContent = cmd || '';
       } catch (e){
         commandEl.textContent = `// Error generating command: ${e.message}`;
       }
+      updateHash(values);
     }
 
     updateCommand();
@@ -202,10 +233,48 @@
     }
   });
 
+  addBtn.addEventListener('click', () => {
+    const cmd = commandEl.textContent.trim();
+    if (!cmd) return;
+    scriptCommands.push(cmd);
+    scriptCommandsEl.textContent = scriptCommands.join('\n');
+    scriptEl.classList.remove('hidden');
+  });
+
+  copyScriptBtn.addEventListener('click', async () => {
+    const txt = scriptCommandsEl.textContent || '';
+    if (!txt.trim()) return;
+    try {
+      await navigator.clipboard.writeText(txt);
+      copyScriptBtn.textContent = 'Copied!';
+      setTimeout(() => { copyScriptBtn.textContent = 'Copy Script'; }, 1200);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = txt; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    }
+  });
+
   searchEl.addEventListener('input', () => renderList(searchEl.value));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== searchEl){
+      e.preventDefault();
+      searchEl.focus();
+    }
+  });
 
   // Initial render
   renderList();
+  if (initialState.get('scenario')){
+    const id = initialState.get('scenario');
+    const vals = {};
+    initialState.forEach((v,k) => {
+      if (k === 'scenario') return;
+      vals[k] = v.includes(',') ? v.split(',') : v;
+    });
+    selectScenario(id, vals);
+  }
 
   // Theming: accent color persistence and contrast handling
   function hexToRgb(hex){
