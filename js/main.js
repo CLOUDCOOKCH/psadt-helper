@@ -9,6 +9,7 @@
   const scriptEl = document.getElementById('script');
   const scriptCommandsEl = document.getElementById('script-commands');
   const copyScriptBtn = document.getElementById('copy-script-btn');
+  const downloadScriptBtn = document.getElementById('download-script-btn');
   const accentEl = document.getElementById('accent');
   const swatchesEl = document.getElementById('accent-swatches');
   const bgEl = document.getElementById('background');
