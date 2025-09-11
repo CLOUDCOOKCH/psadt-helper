@@ -54,7 +54,7 @@ body{
 .tools .card{margin:0}
 .full{width:100%}
 .muted{color:var(--muted)}
-.scenario-item{display:flex;flex-direction:column;gap:4px;border-radius:10px;padding:10px 12px;margin:6px 0;cursor:pointer;border:1px solid transparent}
+.scenario-item{display:flex;flex-direction:column;gap:4px;border-radius:10px;padding:10px 12px;margin:6px 0;cursor:pointer;border:1px solid transparent;animation:fadeInUp .4s ease both}
 .scenario-item:hover{background:#F3F1FE;border-color:#E9E8FF}
 .scenario-item.active{background:#ECEBFF;border:1px solid #DAD8FF}
 .scenario-name{display:block;font-weight:600}
@@ -63,10 +63,13 @@ body{
   .content{display:flex;flex-direction:column;gap:24px}
   .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow: var(--shadow)}
 .hidden{display:none}
-  .intro{color:var(--muted);text-align:center;padding:40px;border:1px dashed var(--border);border-radius:10px}
+  .intro{color:var(--muted);text-align:center;padding:40px;border:1px dashed var(--border);border-radius:10px;animation:fadeIn 1s ease-in-out}
   .intro-logo{height:64px;width:auto;margin-bottom:16px}
   .intro-steps{list-style:none;padding:0;max-width:400px;margin:24px auto;text-align:left;display:flex;flex-direction:column;gap:12px}
-  .intro-steps li{display:flex;align-items:center;gap:12px}
+  .intro-steps li{display:flex;align-items:center;gap:12px;animation:fadeInUp .6s ease both}
+  .intro-steps li:nth-child(2){animation-delay:.15s}
+  .intro-steps li:nth-child(3){animation-delay:.3s}
+  .intro-steps .emoji{font-size:20px}
 
 .form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form .field{display:flex;flex-direction:column;gap:6px}
@@ -87,11 +90,21 @@ body{
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .fullwidth{width:100%}
 
-.footer{
+.footer{ 
   display:flex;gap:8px;align-items:center;justify-content:center;color:var(--muted);
   padding:16px;border-top:1px solid var(--border);background:var(--surface);
 }
 .footer a{color:var(--muted)}
+
+@keyframes fadeIn {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(8px); }
+  to { opacity:1; transform:translateY(0); }
+}
 
 
 @media (prefers-color-scheme: dark){

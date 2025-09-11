@@ -21,7 +21,7 @@
 
   function renderList(){
     listEl.innerHTML = '';
-    const scenarios = window.PSADT_SCENARIOS;
+    const scenarios = Array.isArray(window.PSADT_SCENARIOS) ? window.PSADT_SCENARIOS : [];
     scenarios.forEach(s => {
       const item = document.createElement('div');
       item.className = 'scenario-item' + (activeId === s.id ? ' active' : '');
@@ -51,7 +51,8 @@
   function selectScenario(id, preset = {}){
     activeId = id;
     renderList();
-    const s = window.PSADT_SCENARIOS.find(x => x.id === id);
+    const list = Array.isArray(window.PSADT_SCENARIOS) ? window.PSADT_SCENARIOS : [];
+    const s = list.find(x => x.id === id);
     if (!s) return;
 
     introEl.classList.add('hidden');
