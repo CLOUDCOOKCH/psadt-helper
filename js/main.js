@@ -9,7 +9,6 @@
   const scriptEl = document.getElementById('script');
   const scriptCommandsEl = document.getElementById('script-commands');
   const copyScriptBtn = document.getElementById('copy-script-btn');
-  const downloadScriptBtn = document.getElementById('download-script-btn');
   const searchEl = document.getElementById('search');
   const accentEl = document.getElementById('accent');
   const swatchesEl = document.getElementById('accent-swatches');
@@ -255,7 +254,6 @@
       document.execCommand('copy'); document.body.removeChild(ta);
     }
   });
-
   downloadScriptBtn.addEventListener('click', () => {
     const txt = scriptCommandsEl.textContent || '';
     if (!txt.trim()) return;
@@ -269,7 +267,6 @@
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   });
-
   searchEl.addEventListener('input', () => renderList(searchEl.value));
 
   document.addEventListener('keydown', (e) => {
