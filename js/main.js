@@ -254,7 +254,19 @@
       document.execCommand('copy'); document.body.removeChild(ta);
     }
   });
-
+  downloadScriptBtn.addEventListener('click', () => {
+    const txt = scriptCommandsEl.textContent || '';
+    if (!txt.trim()) return;
+    const blob = new Blob([txt], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'psadt-script.ps1';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
   searchEl.addEventListener('input', () => renderList(searchEl.value));
 
   document.addEventListener('keydown', (e) => {
