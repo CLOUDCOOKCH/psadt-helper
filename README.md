@@ -1,6 +1,6 @@
-PSADT Helper
+Cloudcook PSADT Helper
 
-A lightweight static website to quickly compose PSADT (PowerShell App Deployment Toolkit) command snippets. Pick a use case, fill any fields, and copy the generated command.
+A minimalist, premium-feel website to quickly compose PSADT (PowerShell App Deployment Toolkit) command snippets. Pick a use case, fill fields, and copy the generated command. Brand-aligned with Cloudcook.
 
 Getting started
 - Open `psadt-helper/index.html` in your browser.

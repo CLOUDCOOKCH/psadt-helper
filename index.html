@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PSADT Helper</title>
+    <title>Cloudcook PSADT Helper</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -17,7 +17,10 @@
       <symbol id="ic-download" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14v-2H5v2Zm7-18l-5 5h3v6h4V7h3l-5-5Z"/></symbol>
     </svg>
     <header class="app-header">
-      <h1>PSADT Helper</h1>
+      <div class="brand">
+        <img class="logo" src="assets/cloudcook-logo.png" alt="Cloudcook" onerror="this.classList.add('hidden')" />
+        <h1>Cloudcook PSADT Helper</h1>
+      </div>
     </header>
 
     <main class="layout layout-3">
@@ -49,26 +52,26 @@
           <div class="theme-picker" title="Choose accent color">
             <span class="theme-label">Accent</span>
             <div class="swatches" id="accent-swatches" aria-label="Accent presets">
-              <button class="swatch" data-color="#7aa2ff" style="--c:#7aa2ff" aria-label="Blue"></button>
-              <button class="swatch" data-color="#22d3ee" style="--c:#22d3ee" aria-label="Cyan"></button>
-              <button class="swatch" data-color="#a78bfa" style="--c:#a78bfa" aria-label="Purple"></button>
-              <button class="swatch" data-color="#f59e0b" style="--c:#f59e0b" aria-label="Amber"></button>
-              <button class="swatch" data-color="#ff6b6b" style="--c:#ff6b6b" aria-label="Red"></button>
-              <button class="swatch" data-color="#3ecf8e" style="--c:#3ecf8e" aria-label="Green"></button>
+              <button class="swatch" data-color="#175BEB" style="--c:#175BEB" aria-label="Brand Blue"></button>
+              <button class="swatch" data-color="#4776E6" style="--c:#4776E6" aria-label="Blue"></button>
+              <button class="swatch" data-color="#8E54E9" style="--c:#8E54E9" aria-label="Violet"></button>
+              <button class="swatch" data-color="#EC008C" style="--c:#EC008C" aria-label="Magenta"></button>
+              <button class="swatch" data-color="#FFC225" style="--c:#FFC225" aria-label="Gold"></button>
+              <button class="swatch" data-color="#1FB381" style="--c:#1FB381" aria-label="Green"></button>
             </div>
-            <input id="accent" class="accent" type="color" value="#7aa2ff" aria-label="Custom accent color" />
+            <input id="accent" class="accent" type="color" value="#175BEB" aria-label="Custom accent color" />
           </div>
           <div class="theme-picker" title="Choose background color" style="margin-top:8px">
             <span class="theme-label">Background</span>
             <div class="swatches" id="bg-swatches" aria-label="Background presets">
-              <button class="swatch" data-color="#0f1220" style="--c:#0f1220" aria-label="Indigo Night"></button>
-              <button class="swatch" data-color="#0b0e18" style="--c:#0b0e18" aria-label="Deep Space"></button>
-              <button class="swatch" data-color="#161616" style="--c:#161616" aria-label="Carbon"></button>
-              <button class="swatch" data-color="#0f1f2e" style="--c:#0f1f2e" aria-label="Midnight Blue"></button>
-              <button class="swatch" data-color="#101820" style="--c:#101820" aria-label="Gunmetal"></button>
-              <button class="swatch" data-color="#1b1f3a" style="--c:#1b1f3a" aria-label="Abyss"></button>
+              <button class="swatch" data-color="#FAF8FF" style="--c:#FAF8FF" aria-label="Cloudcook Base"></button>
+              <button class="swatch" data-color="#FFFFFF" style="--c:#FFFFFF" aria-label="White"></button>
+              <button class="swatch" data-color="#E9E8FF" style="--c:#E9E8FF" aria-label="Lavender"></button>
+              <button class="swatch" data-color="#FFFDF7" style="--c:#FFFDF7" aria-label="Ivory"></button>
+              <button class="swatch" data-color="#F6F6FF" style="--c:#F6F6FF" aria-label="Mist"></button>
+              <button class="swatch" data-color="#F3F1FE" style="--c:#F3F1FE" aria-label="Lilac"></button>
             </div>
-            <input id="background" class="accent" type="color" value="#0f1220" aria-label="Custom background color" />
+            <input id="background" class="accent" type="color" value="#FAF8FF" aria-label="Custom background color" />
           </div>
         </div>
         
@@ -76,7 +79,7 @@
     </main>
 
     <footer class="footer">
-      <span>PSADT Helper</span>
+      <span>Cloudcook PSADT Helper</span>
       <span>·</span>
       <a href="https://psappdeploytoolkit.com/" target="_blank" rel="noreferrer">PSADT Docs</a>
       <span>·</span>
