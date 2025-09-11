@@ -51,9 +51,9 @@ body{
 .swatch{width:18px;height:18px;border-radius:50%;border:2px solid #ffffff;background:var(--c);cursor:pointer;padding:0}
 .swatch:focus{outline:3px solid color-mix(in oklab, var(--c) 40%, transparent)}
 
-.layout{display:grid;gap:16px;padding:16px}
-.layout-3{grid-template-columns:280px 1fr 300px}
-.sidebar{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px;height:calc(100vh - 120px);overflow:auto}
+  .layout{display:grid;gap:24px;padding:24px}
+  .layout-3{grid-template-columns:280px 1fr 300px}
+  .sidebar{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;height:calc(100vh - 120px);overflow:auto}
 .tools{
   background:transparent;border:none;border-radius:10px;padding:0;display:flex;flex-direction:column;gap:16px;
 }
@@ -66,12 +66,13 @@ body{
 .scenario-name{display:block;font-weight:600}
 .scenario-desc{display:block;color:var(--muted);font-size:12px}
 
-.content{display:flex;flex-direction:column;gap:16px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow: var(--shadow)}
+  .content{display:flex;flex-direction:column;gap:24px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow: var(--shadow)}
 .hidden{display:none}
-.intro{color:var(--muted);text-align:center;padding:48px;border:1px dashed var(--border);border-radius:10px}
-.intro-logo{height:64px;width:auto;margin-bottom:16px}
-.intro-steps{max-width:400px;margin:16px auto;text-align:left}
+  .intro{color:var(--muted);text-align:center;padding:40px;border:1px dashed var(--border);border-radius:10px}
+  .intro-logo{height:64px;width:auto;margin-bottom:16px}
+  .intro-steps{list-style:none;padding:0;max-width:400px;margin:24px auto;text-align:left;display:flex;flex-direction:column;gap:12px}
+  .intro-steps li{display:flex;align-items:center;gap:12px}
 
 .form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form .field{display:flex;flex-direction:column;gap:6px}
@@ -85,7 +86,7 @@ body{
 .output-title{color:var(--muted)}
 .code{background:#ffffff;border:1px solid var(--border);border-radius:10px;padding:12px;white-space:pre-wrap}
 
-.btn{display:inline-flex;align-items:center;gap:10px;background:#ffffff;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600;letter-spacing:.2px;transition:background .2s ease,border-color .2s ease,transform .02s ease, box-shadow .2s ease}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:#ffffff;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:8px 12px;cursor:pointer;font-weight:600;letter-spacing:.2px;transition:background .2s ease,border-color .2s ease,transform .02s ease, box-shadow .2s ease}
 .btn:hover{background:#F6F6FF;border-color:#DAD8FF;box-shadow:0 6px 24px rgba(23,91,235,.08)}
 .btn:active{transform:translateY(1px)}
 .btn-primary{background:var(--accent);color:var(--accent-contrast);border-color:transparent}
