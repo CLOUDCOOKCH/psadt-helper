@@ -37,9 +37,19 @@
         <div id="output" class="card hidden">
           <div class="output-toolbar">
             <span class="output-title">Generated Command</span>
-            <button id="copy-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy</span></button>
+            <div style="display:flex;gap:8px">
+              <button id="add-btn" class="btn"><svg class="icon"><use href="#ic-play"/></svg><span>Add</span></button>
+              <button id="copy-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy</span></button>
+            </div>
           </div>
           <pre id="command" class="code"></pre>
+        </div>
+        <div id="script" class="card hidden">
+          <div class="output-toolbar">
+            <span class="output-title">Script</span>
+            <button id="copy-script-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy Script</span></button>
+          </div>
+          <pre id="script-commands" class="code"></pre>
         </div>
         <div id="empty" class="empty">
           <p>Select a scenario to begin.</p>
