@@ -16,6 +16,25 @@ function toArrayLiteral(input) {
   return items.length ? `@(${items.join(',')})` : '';
 }
 
+// Build a Join-Path expression using a base variable (e.g., $adtSession.DirFiles)
+function joinPath(baseVar, relPath) {
+  const base = baseVar && typeof baseVar === 'string' ? baseVar : '$adtSession.DirFiles';
+  const rel = psq(relPath || '');
+  return `Join-Path ${base} '${rel}'`;
+}
+
+// Build an array of Join-Path expressions from a comma/newline list
+function joinPathArray(baseVar, listText) {
+  if (!listText) return '';
+  const base = baseVar && typeof baseVar === 'string' ? baseVar : '$adtSession.DirFiles';
+  const items = String(listText)
+    .split(/[\n,]/)
+    .map(s => s.trim())
+    .filter(Boolean)
+    .map(p => `(Join-Path ${base} '${psq(p)}')`);
+  return items.length ? `@(${items.join(', ')})` : '';
+}
+
 window.PSADT_SCENARIOS = [
   // MSI operations via Start-ADTMsiProcess
   {
@@ -23,17 +42,17 @@ window.PSADT_SCENARIOS = [
     name: 'MSI: Install',
     description: 'Start-ADTMsiProcess -Action Install with transforms and properties.',
     fields: [
-      { id: 'filePath', label: 'MSI Path', type: 'text', required: true, placeholder: "files\\app.msi" },
+      { id: 'filePath', label: 'MSI File', type: 'text', required: true, placeholder: "app.msi", fileBase: true },
       { id: 'commonArgs', label: 'Common Parameters', type: 'multiselect', required: false, options: [
         '/qn', 'REBOOT=ReallySuppress', 'ALLUSERS=1', 'MSIINSTALLPERUSER=1', 'ADDLOCAL=ALL', 'ARPSYSTEMCOMPONENT=1'
       ]},
-      { id: 'transforms', label: 'Transforms (comma-separated)', type: 'text', required: false, placeholder: "files\\app.mst, files\\custom.mst" },
+      { id: 'transforms', label: 'Transforms (comma-separated)', type: 'text', required: false, placeholder: "app.mst, custom.mst", fileBase: true },
       { id: 'argumentList', label: 'Additional Parameters', type: 'text', required: false, placeholder: "ADDLOCAL=ALL" },
       { id: 'logFileName', label: 'Log File Name', type: 'text', required: false, placeholder: 'app_install.log' }
     ],
     build: (v) => {
-      const parts = ["Start-ADTMsiProcess", `-Action Install`, `-FilePath '${psq(v.filePath)}'`];
-      const t = toArrayLiteral(v.transforms);
+      const parts = ["Start-ADTMsiProcess", `-Action Install`, `-FilePath ${joinPath(v.filePathBase, v.filePath)}`];
+      const t = joinPathArray(v.transformsBase, v.transforms);
       if (t) parts.push(`-Transforms ${t}`);
       const args = [];
       if (Array.isArray(v.commonArgs) && v.commonArgs.length) args.push(...v.commonArgs);
@@ -49,7 +68,7 @@ window.PSADT_SCENARIOS = [
     description: 'Start-ADTMsiProcess -Action Uninstall by ProductCode or MSI path.',
     fields: [
       { id: 'productCode', label: 'ProductCode (GUID)', type: 'text', required: false, placeholder: '{GUID-HERE}' },
-      { id: 'filePath', label: 'MSI Path (alternative)', type: 'text', required: false, placeholder: "files\\app.msi" },
+      { id: 'filePath', label: 'MSI File (alternative)', type: 'text', required: false, placeholder: "app.msi", fileBase: true },
       { id: 'commonArgs', label: 'Common Parameters', type: 'multiselect', required: false, options: [
         '/qn', 'REBOOT=ReallySuppress'
       ]},
@@ -58,7 +77,7 @@ window.PSADT_SCENARIOS = [
     build: (v) => {
       const parts = ["Start-ADTMsiProcess", `-Action Uninstall`];
       if (v.productCode) parts.push(`-ProductCode '${psq(v.productCode)}'`);
-      else if (v.filePath) parts.push(`-FilePath '${psq(v.filePath)}'`);
+      else if (v.filePath) parts.push(`-FilePath ${joinPath(v.filePathBase, v.filePath)}`);
       const args = [];
       if (Array.isArray(v.commonArgs) && v.commonArgs.length) args.push(...v.commonArgs);
       if (v.argumentList) args.push(v.argumentList);
@@ -72,7 +91,7 @@ window.PSADT_SCENARIOS = [
     description: 'Start-ADTMsiProcess -Action Repair with optional RepairMode.',
     fields: [
       { id: 'productCode', label: 'ProductCode (GUID)', type: 'text', required: false, placeholder: '{GUID-HERE}' },
-      { id: 'filePath', label: 'MSI Path (alternative)', type: 'text', required: false, placeholder: "files\\app.msi" },
+      { id: 'filePath', label: 'MSI File (alternative)', type: 'text', required: false, placeholder: "app.msi", fileBase: true },
       { id: 'repairMode', label: 'RepairMode', type: 'text', required: false, placeholder: 'vomus' },
       { id: 'commonArgs', label: 'Common Parameters', type: 'multiselect', required: false, options: [
         '/qn', 'REBOOT=ReallySuppress', 'REINSTALL=ALL', 'REINSTALLMODE=vomus'
@@ -82,7 +101,7 @@ window.PSADT_SCENARIOS = [
     build: (v) => {
       const parts = ["Start-ADTMsiProcess", `-Action Repair`];
       if (v.productCode) parts.push(`-ProductCode '${psq(v.productCode)}'`);
-      else if (v.filePath) parts.push(`-FilePath '${psq(v.filePath)}'`);
+      else if (v.filePath) parts.push(`-FilePath ${joinPath(v.filePathBase, v.filePath)}`);
       if (v.repairMode) parts.push(`-RepairMode '${psq(v.repairMode)}'`);
       const args = [];
       if (Array.isArray(v.commonArgs) && v.commonArgs.length) args.push(...v.commonArgs);
@@ -98,11 +117,11 @@ window.PSADT_SCENARIOS = [
     name: 'MSP: Apply Patch',
     description: 'Start-ADTMspProcess to apply .MSP patch.',
     fields: [
-      { id: 'filePath', label: 'MSP Path', type: 'text', required: true, placeholder: "files\\update.msp" },
+      { id: 'filePath', label: 'MSP File', type: 'text', required: true, placeholder: "update.msp", fileBase: true },
       { id: 'additionalArgs', label: 'AdditionalArgumentList', type: 'text', required: false, placeholder: '/qb!' }
     ],
     build: (v) => {
-      const parts = ["Start-ADTMspProcess", `-FilePath '${psq(v.filePath)}'`];
+      const parts = ["Start-ADTMspProcess", `-FilePath ${joinPath(v.filePathBase, v.filePath)}`];
       if (v.additionalArgs) parts.push(`-AdditionalArgumentList '${psq(v.additionalArgs)}'`);
       return parts.join(' ');
     }
@@ -114,14 +133,14 @@ window.PSADT_SCENARIOS = [
     name: 'MSI: Install (User Context)',
     description: 'Start-ADTMsiProcessAsUser -Action Install for per-user installs.',
     fields: [
-      { id: 'filePath', label: 'MSI Path', type: 'text', required: true, placeholder: "files\\app.msi" },
+      { id: 'filePath', label: 'MSI File', type: 'text', required: true, placeholder: "app.msi", fileBase: true },
       { id: 'commonArgs', label: 'Common Parameters', type: 'multiselect', required: false, options: [
         '/qn', 'REBOOT=ReallySuppress', 'MSIINSTALLPERUSER=1', 'ADDLOCAL=ALL'
       ]},
       { id: 'argumentList', label: 'Additional Parameters', type: 'text', required: false, placeholder: "" }
     ],
     build: (v) => {
-      const parts = ["Start-ADTMsiProcessAsUser", `-Action Install`, `-FilePath '${psq(v.filePath)}'`];
+      const parts = ["Start-ADTMsiProcessAsUser", `-Action Install`, `-FilePath ${joinPath(v.filePathBase, v.filePath)}`];
       const args = [];
       if (Array.isArray(v.commonArgs) && v.commonArgs.length) args.push(...v.commonArgs);
       if (v.argumentList) args.push(v.argumentList);
@@ -136,12 +155,12 @@ window.PSADT_SCENARIOS = [
     name: 'Process: Run (System)',
     description: 'Start-ADTProcess to run an EXE in system context.',
     fields: [
-      { id: 'filePath', label: 'EXE Path', type: 'text', required: true, placeholder: "files\\setup.exe" },
+      { id: 'filePath', label: 'EXE File', type: 'text', required: true, placeholder: "setup.exe", fileBase: true },
       { id: 'argumentList', label: 'Arguments', type: 'text', required: false, placeholder: '/S or /quiet' },
       { id: 'workingDir', label: 'Working Directory', type: 'text', required: false, placeholder: 'files' }
     ],
     build: (v) => {
-      const parts = ["Start-ADTProcess", `-FilePath '${psq(v.filePath)}'`];
+      const parts = ["Start-ADTProcess", `-FilePath ${joinPath(v.filePathBase, v.filePath)}`];
       if (v.argumentList) parts.push(`-ArgumentList '${psq(v.argumentList)}'`);
       if (v.workingDir) parts.push(`-WorkingDirectory '${psq(v.workingDir)}'`);
       return parts.join(' ');
@@ -152,12 +171,12 @@ window.PSADT_SCENARIOS = [
     name: 'Process: Run (User)',
     description: 'Start-ADTProcessAsUser to run a process in user context.',
     fields: [
-      { id: 'filePath', label: 'EXE Path', type: 'text', required: true, placeholder: "files\\tool.exe" },
+      { id: 'filePath', label: 'EXE File', type: 'text', required: true, placeholder: "tool.exe", fileBase: true },
       { id: 'argumentList', label: 'Arguments', type: 'text', required: false, placeholder: '--help' },
       { id: 'workingDir', label: 'Working Directory', type: 'text', required: false, placeholder: 'files' }
     ],
     build: (v) => {
-      const parts = ["Start-ADTProcessAsUser", `-FilePath '${psq(v.filePath)}'`];
+      const parts = ["Start-ADTProcessAsUser", `-FilePath ${joinPath(v.filePathBase, v.filePath)}`];
       if (v.argumentList) parts.push(`-ArgumentList '${psq(v.argumentList)}'`);
       if (v.workingDir) parts.push(`-WorkingDirectory '${psq(v.workingDir)}'`);
       return parts.join(' ');
