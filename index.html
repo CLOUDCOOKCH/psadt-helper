@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:" />
     <title>Cloudcook PSADT Helper</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -18,8 +19,9 @@
     </svg>
     <header class="app-header">
       <div class="brand">
-        <img class="logo" src="assets/cloudcook-logo.png" alt="Cloudcook" onerror="this.classList.add('hidden')" />
+        <img class="logo" src="assets/cloudcook-logo.png" alt="Cloudcook" data-hide-on-error />
         <h1>Cloudcook PSADT Helper</h1>
+        <label for="telemetry-toggle" class="telemetry-toggle"><input type="checkbox" id="telemetry-toggle" /> Enable telemetry</label>
       </div>
     </header>
 
@@ -31,7 +33,7 @@
 
       <section class="content">
         <div id="intro" class="intro">
-          <img src="assets/cloudcook-logo.png" alt="Cloudcook" class="intro-logo" onerror="this.classList.add('hidden')" />
+          <img src="assets/cloudcook-logo.png" alt="Cloudcook" class="intro-logo" data-hide-on-error />
           <h2>Welcome to Cloudcook PSADT Helper <span aria-hidden="true">✨</span></h2>
           <p>Build and share <strong>PowerShell App Deployment Toolkit</strong> commands.</p>
           <ul class="intro-steps">
@@ -115,9 +117,10 @@
       <a href="https://github.com/PSAppDeployToolkit/PSAppDeployToolkit" target="_blank" rel="noreferrer">GitHub</a>
     </footer>
 
-    <script src="js/commands.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/editor.js"></script>
+    <script src="src/js/telemetry.js"></script>
+    <script src="src/js/commands.js"></script>
+    <script src="src/js/main.js"></script>
+    <script src="src/js/editor.js"></script>
 
   </body>
   </html>

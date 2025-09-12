@@ -1,17 +1,26 @@
-Cloudcook PSADT Helper
+# Cloudcook PSADT Helper
 
-A minimalist, premium-feel website to quickly compose PSADT (PowerShell App Deployment Toolkit) command snippets. Pick a use case, fill fields, and copy the generated command. Brand-aligned with Cloudcook.
+A minimalist site to compose PSAppDeployToolkit (PSADT) command snippets and convert legacy 3.x syntax. Now includes linting, tests and CI.
 
-Getting started
-- Open `psadt-helper/index.html` in your browser.
-- Choose a scenario (e.g., Install MSI) and fill in the inputs.
-- Copy the generated command to your clipboard.
+## Quickstart
 
-Notes
-- Uses PSADT 4.1.x function names (e.g., `Start-ADTMsiProcess`, `Start-ADTProcess`, `Show-ADTInstallationPrompt`).
-- Includes a converter to translate common PSADT 3.8/3.10 commands to 4.1 syntax.
-- The legacy converter now supports custom parameter mappings for additional 3.x parameters.
-- Scenarios now include presets for common silent switches, file copy and registry helpers, in addition to MSI and dialog helpers.
-- Search the scenario list, validate GUID fields, and manage a script queue with reordering/removal.
-- Scripts can be shared via a generated link, downloaded, or copied to the clipboard.
-- This is designed to be easy to extend. See `psadt-helper/js/commands.js`.
+```powershell
+pwsh ./make.ps1 -Install
+```
+This installs dependencies, runs JS tests and Pester tests.
+
+## Project Layout
+
+- `src/js` - browser JavaScript modules
+- `src/ps` - PowerShell functions
+- `tests/js` - Jest tests for JS helpers
+- `tests/ps` - Pester tests
+- `reports` - audit reports
+
+## Architecture
+
+Static HTML (`index.html`) served via GitHub Pages. JS builds commands using scenario definitions. PowerShell module provides legacy converter.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).

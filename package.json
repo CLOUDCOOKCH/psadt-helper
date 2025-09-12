@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "test": "node test/commands.test.js"
+    "lint": "eslint src/js tests/js",
+    "fmt": "prettier --write \"src/js/**/*.js\" \"tests/js/**/*.js\"",
+    "test": "jest"
   },
   "devDependencies": {
-    "vite": "^5.1.0"
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "jest": "^29.7.0"
   }
 }
