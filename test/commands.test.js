@@ -29,4 +29,29 @@ assert.strictEqual(
   'NoPath -Pathology -FilePath'
 );
 
+const proc = PSADT_SCENARIOS.find(s => s.id === 'process-system');
+const procCmd = proc.build({
+  filePathBase: '$adtSession.DirFiles',
+  filePath: 'setup.exe',
+  commonArgs: ['/S'],
+  argumentList: '--flag',
+  workingDir: 'files'
+});
+assert.strictEqual(
+  procCmd,
+  "Start-ADTProcess -FilePath \"$adtSession.DirFiles\\setup.exe\" -ArgumentList '/S --flag' -WorkingDirectory 'files'"
+);
+
+const copy = PSADT_SCENARIOS.find(s => s.id === 'file-copy');
+const copyCmd = copy.build({
+  sourceBase: '$adtSession.DirFiles',
+  source: 'a.txt',
+  dest: 'C\\Temp',
+  overwrite: 'Yes'
+});
+assert.strictEqual(
+  copyCmd,
+  "Copy-ADTFile -Path \"$adtSession.DirFiles\\a.txt\" -Destination 'C\\Temp' -Overwrite"
+);
+
 console.log('All tests passed.');

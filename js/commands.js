@@ -129,7 +129,7 @@ const PSADT_SCENARIOS = [
     name: 'MSI: Uninstall',
     description: 'Start-ADTMsiProcess -Action Uninstall by ProductCode or MSI path.',
     fields: [
-      { id: 'productCode', label: 'ProductCode (GUID)', type: 'text', required: false, placeholder: '{GUID-HERE}' },
+      { id: 'productCode', label: 'ProductCode (GUID)', type: 'text', required: false, placeholder: '{GUID-HERE}', pattern: '^\\{?[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}\\}?$', patternMessage: 'Enter a valid GUID' },
       { id: 'filePath', label: 'MSI File (alternative)', type: 'text', required: false, placeholder: "app.msi", fileBase: true },
       { id: 'commonArgs', label: 'Common Parameters', type: 'multiselect', required: false, options: [
         '/qn', 'REBOOT=ReallySuppress'
@@ -152,7 +152,7 @@ const PSADT_SCENARIOS = [
     name: 'MSI: Repair',
     description: 'Start-ADTMsiProcess -Action Repair with optional RepairMode.',
     fields: [
-      { id: 'productCode', label: 'ProductCode (GUID)', type: 'text', required: false, placeholder: '{GUID-HERE}' },
+      { id: 'productCode', label: 'ProductCode (GUID)', type: 'text', required: false, placeholder: '{GUID-HERE}', pattern: '^\\{?[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}\\}?$', patternMessage: 'Enter a valid GUID' },
       { id: 'filePath', label: 'MSI File (alternative)', type: 'text', required: false, placeholder: "app.msi", fileBase: true },
       { id: 'repairMode', label: 'RepairMode', type: 'text', required: false, placeholder: 'vomus' },
       { id: 'commonArgs', label: 'Common Parameters', type: 'multiselect', required: false, options: [
@@ -218,12 +218,16 @@ const PSADT_SCENARIOS = [
     description: 'Start-ADTProcess to run an EXE in system context.',
     fields: [
       { id: 'filePath', label: 'EXE File', type: 'text', required: true, placeholder: "setup.exe", fileBase: true },
-      { id: 'argumentList', label: 'Arguments', type: 'text', required: false, placeholder: '/S or /quiet' },
+      { id: 'commonArgs', label: 'Common Silent Switches', type: 'multiselect', required: false, options: ['/S','/s','/silent','/verysilent','/quiet'] },
+      { id: 'argumentList', label: 'Additional Arguments', type: 'text', required: false, placeholder: '/log=app.log' },
       { id: 'workingDir', label: 'Working Directory', type: 'text', required: false, placeholder: 'files' }
     ],
     build: (v) => {
       const parts = ["Start-ADTProcess", `-FilePath ${joinPath(v.filePathBase, v.filePath)}`];
-      if (v.argumentList) parts.push(`-ArgumentList '${psq(v.argumentList)}'`);
+      const args = [];
+      if (Array.isArray(v.commonArgs) && v.commonArgs.length) args.push(...v.commonArgs);
+      if (v.argumentList) args.push(v.argumentList);
+      if (args.length) parts.push(`-ArgumentList '${psq(args.join(' '))}'`);
       if (v.workingDir) parts.push(`-WorkingDirectory '${psq(v.workingDir)}'`);
       return parts.join(' ');
     }
@@ -241,6 +245,39 @@ const PSADT_SCENARIOS = [
       const parts = ["Start-ADTProcessAsUser", `-FilePath ${joinPath(v.filePathBase, v.filePath)}`];
       if (v.argumentList) parts.push(`-ArgumentList '${psq(v.argumentList)}'`);
       if (v.workingDir) parts.push(`-WorkingDirectory '${psq(v.workingDir)}'`);
+      return parts.join(' ');
+    }
+  },
+
+  // File and registry helpers
+  {
+    id: 'file-copy',
+    name: 'File: Copy',
+    description: 'Copy-ADTFile to copy a file from toolkit to a destination.',
+    fields: [
+      { id: 'source', label: 'Source File', type: 'text', required: true, placeholder: 'file.txt', fileBase: true },
+      { id: 'dest', label: 'Destination Path', type: 'text', required: true, placeholder: 'C:\\\\Path' },
+      { id: 'overwrite', label: 'Overwrite', type: 'select', options: ['No','Yes'] }
+    ],
+    build: (v) => {
+      const parts = ["Copy-ADTFile", `-Path ${joinPath(v.sourceBase, v.source)}`, `-Destination '${psq(v.dest)}'`];
+      if (v.overwrite === 'Yes') parts.push('-Overwrite');
+      return parts.join(' ');
+    }
+  },
+  {
+    id: 'registry-set',
+    name: 'Registry: Set Value',
+    description: 'Set-ADTRegistryKey to create or update a registry value.',
+    fields: [
+      { id: 'key', label: 'Key Path', type: 'text', required: true, placeholder: 'HKLM:SOFTWARE\\Vendor' },
+      { id: 'name', label: 'Value Name', type: 'text', required: true, placeholder: 'Value' },
+      { id: 'value', label: 'Value', type: 'text', required: true, placeholder: 'Data' },
+      { id: 'type', label: 'Type', type: 'select', options: ['String','Dword','Qword'] }
+    ],
+    build: (v) => {
+      const parts = ["Set-ADTRegistryKey", `-Key '${psq(v.key)}'`, `-Name '${psq(v.name)}'`, `-Value '${psq(v.value)}'`];
+      if (v.type) parts.push(`-Type ${v.type}`);
       return parts.join(' ');
     }
   },

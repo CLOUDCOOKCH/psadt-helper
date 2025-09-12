@@ -25,6 +25,7 @@
 
     <main class="layout layout-3">
       <aside class="sidebar" aria-label="Scenarios">
+        <input type="search" id="scenario-search" class="scenario-search" placeholder="Search" aria-label="Search scenarios" />
         <div id="scenario-list"></div>
       </aside>
 
@@ -48,17 +49,18 @@
               <button id="copy-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy</span></button>
             </div>
           </div>
-          <pre id="command" class="code"></pre>
+          <pre id="command" class="code" aria-live="polite"></pre>
         </div>
         <div id="script" class="card hidden">
           <div class="output-toolbar">
             <span class="output-title">Script</span>
             <div style="display:flex;gap:8px">
+              <button id="share-script-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy Link</span></button>
               <button id="download-script-btn" class="btn"><svg class="icon"><use href="#ic-download"/></svg><span>Download</span></button>
               <button id="copy-script-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy Script</span></button>
             </div>
           </div>
-          <pre id="script-commands" class="code"></pre>
+          <div id="script-commands" aria-live="polite"></div>
         </div>
         <div id="empty" class="empty">
           <p>Select a scenario to begin.</p>
