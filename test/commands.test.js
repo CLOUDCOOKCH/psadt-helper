@@ -22,4 +22,11 @@ assert.strictEqual(
   "Start-ADTMsiProcess -Action Install -FilePath 'app.msi' -ArgumentList '/qn' -LogFileName 'app.log'"
 );
 
+// Parameter tokens inside larger words shouldn't be touched
+const tricky = 'NoPath -Pathology -Path';
+assert.strictEqual(
+  convertLegacyCommand(tricky),
+  'NoPath -Pathology -FilePath'
+);
+
 console.log('All tests passed.');

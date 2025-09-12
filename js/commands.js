@@ -80,8 +80,10 @@ function convertLegacyCommand(cmd) {
     ['-CloseApps', '-CloseProcesses'],
     ['-ProgressPercentage', '-StatusBarPercentage']
   ];
+  // Avoid lookbehind for Safari compatibility: capture possible prefix and reinsert
   paramMap.forEach(([oldName, newName]) => {
-    out = out.replace(new RegExp(`(?<![\\w-])${oldName}(?=\\s|$)`, 'gi'), newName);
+    const re = new RegExp(`(^|[^\\w-])${oldName}(?=\\s|$)`, 'gi');
+    out = out.replace(re, (m, p1) => `${p1}${newName}`);
   });
   return out;
 }
