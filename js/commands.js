@@ -55,7 +55,49 @@ function joinPathArray(baseVar, listText) {
   return items.length ? `@(${items.join(', ')})` : '';
 }
 
+// Convert a PSADT 3.8/3.10 command to PSADT 4.1 syntax.
+// Performs simple token replacements for function and parameter names.
+function convertLegacyCommand(cmd) {
+  if (!cmd) return '';
+  let out = String(cmd);
+  const fnMap = [
+    ['Execute-MSI', 'Start-ADTMsiProcess'],
+    ['Execute-MSP', 'Start-ADTMspProcess'],
+    ['Execute-Process', 'Start-ADTProcess'],
+    ['Show-InstallationWelcome', 'Show-ADTInstallationWelcome'],
+    ['Show-InstallationPrompt', 'Show-ADTInstallationPrompt'],
+    ['Show-InstallationProgress', 'Show-ADTInstallationProgress'],
+    ['Show-InstallationRestartPrompt', 'Show-ADTInstallationRestartPrompt']
+  ];
+  fnMap.forEach(([oldName, newName]) => {
+    out = out.replace(new RegExp(`\\b${oldName}\\b`, 'gi'), newName);
+  });
+  const paramMap = [
+    ['-Path', '-FilePath'],
+    ['-Parameters', '-ArgumentList'],
+    ['-Transform', '-Transforms'],
+    ['-LogName', '-LogFileName'],
+    ['-CloseApps', '-CloseProcesses'],
+    ['-ProgressPercentage', '-StatusBarPercentage']
+  ];
+  // Avoid lookbehind for Safari compatibility: capture possible prefix and reinsert
+  paramMap.forEach(([oldName, newName]) => {
+    const re = new RegExp(`(^|[^\\w-])${oldName}(?=\\s|$)`, 'gi');
+    out = out.replace(re, (m, p1) => `${p1}${newName}`);
+  });
+  return out;
+}
+
 const PSADT_SCENARIOS = [
+  {
+    id: 'convert-legacy',
+    name: 'Convert 3.x Command',
+    description: 'Convert a PSADT 3.8/3.10 command to PSADT 4.1 syntax.',
+    fields: [
+      { id: 'legacy', label: 'Legacy Command', type: 'textarea', required: true }
+    ],
+    build: (v) => convertLegacyCommand(v.legacy)
+  },
   // MSI operations via Start-ADTMsiProcess
   {
     id: 'msi-install',
@@ -353,8 +395,9 @@ const PSADT_SCENARIOS = [
 
 if (typeof window !== 'undefined') {
   window.PSADT_SCENARIOS = PSADT_SCENARIOS;
+  window.convertLegacyCommand = convertLegacyCommand;
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = { PSADT_SCENARIOS };
+  module.exports = { PSADT_SCENARIOS, convertLegacyCommand };
 }
