@@ -9,6 +9,7 @@ Getting started
 
 Notes
 - Uses PSADT 4.1.x function names (e.g., `Start-ADTMsiProcess`, `Start-ADTProcess`, `Show-ADTInstallationPrompt`).
+- Includes a converter to translate common PSADT 3.8/3.10 commands to 4.1 syntax.
 - Initial scenarios cover MSI install/uninstall/repair, MSP patch, process (system/user), and the main UI dialogs (Welcome/Progress/Prompt/Restart).
 - This is designed to be easy to extend. See `psadt-helper/js/commands.js`.
 
