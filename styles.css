@@ -47,7 +47,8 @@ body{
 
   .layout{display:grid;gap:24px;padding:24px}
   .layout-3{grid-template-columns:280px 1fr 300px}
-  .sidebar{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;height:calc(100vh - 120px);overflow:auto}
+    .sidebar{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;height:calc(100vh - 120px);overflow:auto}
+  .scenario-search{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
 .tools{
   background:transparent;border:none;border-radius:10px;padding:0;display:flex;flex-direction:column;gap:16px;
 }
@@ -74,16 +75,21 @@ body{
 .form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form .field{display:flex;flex-direction:column;gap:6px}
 .form label{color:var(--muted);font-size:12px;letter-spacing:.2px}
-.form input,.form select,.form textarea{
-  background:#ffffff;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px 12px;
-}
-.form textarea{min-height:74px;resize:vertical}
+  .form input,.form select,.form textarea{
+    background:#ffffff;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px 12px;
+  }
+  .form input:invalid,.form textarea:invalid,.form select:invalid{border-color:#EC008C}
+  .form textarea{min-height:74px;resize:vertical}
 
-.output-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.output-title{color:var(--muted)}
-.code{background:#ffffff;border:1px solid var(--border);border-radius:10px;padding:12px;white-space:pre-wrap}
+  .output-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .output-title{color:var(--muted)}
+  .code{background:#ffffff;border:1px solid var(--border);border-radius:10px;padding:12px;white-space:pre-wrap}
+  .script-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .script-row-tools{display:flex;flex-direction:column;gap:4px}
+  .script-btn{border:1px solid var(--border);background:#ffffff;border-radius:6px;padding:2px 6px;cursor:pointer}
+  .script-btn:hover{background:#F6F6FF}
 
-  .btn{display:inline-flex;align-items:center;gap:10px;background:#ffffff;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:8px 12px;cursor:pointer;font-weight:600;letter-spacing:.2px;transition:background .2s ease,border-color .2s ease,transform .02s ease, box-shadow .2s ease}
+    .btn{display:inline-flex;align-items:center;gap:10px;background:#ffffff;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:8px 12px;cursor:pointer;font-weight:600;letter-spacing:.2px;transition:background .2s ease,border-color .2s ease,transform .02s ease, box-shadow .2s ease}
 .btn:hover{background:#F6F6FF;border-color:#DAD8FF;box-shadow:0 6px 24px rgba(23,91,235,.08)}
 .btn:active{transform:translateY(1px)}
 .btn-primary{background:var(--accent);color:var(--accent-contrast);border-color:transparent}
@@ -123,4 +129,9 @@ body{
   .layout-3{grid-template-columns:1fr}
   .form{grid-template-columns:1fr}
   .sidebar{height:auto}
+}
+@media (max-width:600px){
+  .output-toolbar{flex-direction:column;align-items:flex-start}
+  .script-row{flex-direction:column;align-items:stretch}
+  .script-row-tools{flex-direction:row}
 }

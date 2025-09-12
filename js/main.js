@@ -1,5 +1,6 @@
 (() => {
   const listEl = document.getElementById('scenario-list');
+  const searchEl = document.getElementById('scenario-search');
   const detailsEl = document.getElementById('scenario-details');
   const commandEl = document.getElementById('command');
   const outputEl = document.getElementById('output');
@@ -10,6 +11,7 @@
   const scriptCommandsEl = document.getElementById('script-commands');
   const copyScriptBtn = document.getElementById('copy-script-btn');
   const downloadScriptBtn = document.getElementById('download-script-btn');
+  const shareScriptBtn = document.getElementById('share-script-btn');
   const accentEl = document.getElementById('accent');
   const swatchesEl = document.getElementById('accent-swatches');
   const bgEl = document.getElementById('background');
@@ -23,7 +25,8 @@
   function renderList(){
     listEl.innerHTML = '';
     const scenarios = Array.isArray(window.PSADT_SCENARIOS) ? window.PSADT_SCENARIOS : [];
-    scenarios.forEach(s => {
+    const term = searchEl ? searchEl.value.toLowerCase() : '';
+    scenarios.filter(s => !term || s.name.toLowerCase().includes(term) || (s.description||'').toLowerCase().includes(term)).forEach(s => {
       const item = document.createElement('div');
       item.className = 'scenario-item' + (activeId === s.id ? ' active' : '');
       item.tabIndex = 0;
@@ -144,6 +147,7 @@
       input.name = field.id;
       if (field.placeholder) input.placeholder = field.placeholder;
       if (field.required) input.required = true;
+      if (field.pattern) { input.pattern = field.pattern; if (field.patternMessage) input.title = field.patternMessage; }
 
       input.addEventListener('input', () => updateCommand());
       wrap.appendChild(label);
@@ -198,8 +202,17 @@
     function updateCommand(){
       const values = getValues();
       const missing = s.fields.filter(f => f.required && !values[f.id]);
+      const invalid = s.fields.filter(f => {
+        const el = form.querySelector(`#f_${f.id}`);
+        return el && !el.checkValidity();
+      });
       if (missing.length){
         commandEl.textContent = `// Missing: ${missing.map(m => m.label).join(', ')}`;
+        updateHash(values);
+        return;
+      }
+      if (invalid.length){
+        commandEl.textContent = `// Invalid: ${invalid.map(m => m.label).join(', ')}`;
         updateHash(values);
         return;
       }
@@ -231,16 +244,47 @@
     }
   });
 
+  function renderScript(){
+    scriptCommandsEl.innerHTML = '';
+    scriptCommands.forEach((cmd, idx) => {
+      const row = document.createElement('div');
+      row.className = 'script-row';
+      const pre = document.createElement('pre');
+      pre.className = 'code';
+      pre.textContent = cmd;
+      pre.contentEditable = 'true';
+      pre.addEventListener('input', () => { scriptCommands[idx] = pre.textContent; });
+      const tools = document.createElement('div');
+      tools.className = 'script-row-tools';
+      const up = document.createElement('button'); up.textContent = '↑'; up.className = 'script-btn'; up.title = 'Move up'; up.addEventListener('click', () => moveScript(idx,-1));
+      const down = document.createElement('button'); down.textContent = '↓'; down.className = 'script-btn'; down.title = 'Move down'; down.addEventListener('click', () => moveScript(idx,1));
+      const del = document.createElement('button'); del.textContent = '×'; del.className = 'script-btn'; del.title = 'Remove'; del.addEventListener('click', () => removeScript(idx));
+      tools.appendChild(up); tools.appendChild(down); tools.appendChild(del);
+      row.appendChild(pre); row.appendChild(tools);
+      scriptCommandsEl.appendChild(row);
+    });
+    scriptEl.classList.toggle('hidden', scriptCommands.length === 0);
+  }
+  function moveScript(idx, delta){
+    const n = idx + delta;
+    if (n < 0 || n >= scriptCommands.length) return;
+    const [cmd] = scriptCommands.splice(idx,1);
+    scriptCommands.splice(n,0,cmd);
+    renderScript();
+  }
+  function removeScript(idx){
+    scriptCommands.splice(idx,1);
+    renderScript();
+  }
   addBtn.addEventListener('click', () => {
     const cmd = commandEl.textContent.trim();
     if (!cmd) return;
     scriptCommands.push(cmd);
-    scriptCommandsEl.textContent = scriptCommands.join('\n');
-    scriptEl.classList.remove('hidden');
+    renderScript();
   });
 
   copyScriptBtn.addEventListener('click', async () => {
-    const txt = scriptCommandsEl.textContent || '';
+    const txt = scriptCommands.join('\n');
     if (!txt.trim()) return;
     try {
       await navigator.clipboard.writeText(txt);
@@ -252,29 +296,53 @@
       document.execCommand('copy'); document.body.removeChild(ta);
     }
   });
-  downloadScriptBtn.addEventListener('click', () => {
-    const txt = scriptCommandsEl.textContent || '';
-    if (!txt.trim()) return;
-    const blob = new Blob([txt], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'psadt-script.ps1';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  });
-  // Initial render
+    downloadScriptBtn.addEventListener('click', () => {
+      const txt = scriptCommands.join('\n');
+      if (!txt.trim()) return;
+      const blob = new Blob([txt], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'psadt-script.ps1';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+    if (shareScriptBtn){
+      shareScriptBtn.addEventListener('click', async () => {
+        const txt = scriptCommands.join('\n');
+        if (!txt.trim()) return;
+        const b64 = btoa(txt);
+        const url = `${location.origin}${location.pathname}#script=${encodeURIComponent(b64)}`;
+        try {
+          await navigator.clipboard.writeText(url);
+          shareScriptBtn.textContent = 'Link Copied!';
+          setTimeout(()=>{ shareScriptBtn.textContent = 'Copy Link'; }, 1200);
+        } catch {
+          const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        }
+      });
+    }
+    // Initial render
   renderList();
+  if (searchEl) searchEl.addEventListener('input', renderList);
   if (initialState.get('scenario')){
     const id = initialState.get('scenario');
     const vals = {};
     initialState.forEach((v,k) => {
       if (k === 'scenario') return;
+      if (k === 'script') return;
       vals[k] = v.includes(',') ? v.split(',') : v;
     });
     selectScenario(id, vals);
+  }
+  if (initialState.get('script')){
+    try {
+      const decoded = atob(initialState.get('script'));
+      decoded.split('\n').forEach(c => { if (c.trim()) scriptCommands.push(c); });
+      renderScript();
+    } catch {}
   }
 
   // Theming: accent color persistence and contrast handling
@@ -287,12 +355,20 @@
     const toLin = (c)=>{ c/=255; return c<=0.03928? c/12.92: Math.pow((c+0.055)/1.055,2.4) };
     const R=toLin(r), G=toLin(g), B=toLin(b); return 0.2126*R + 0.7152*G + 0.0722*B;
   }
+  function contrastRatio(c1,c2){
+    const L1 = relativeLuma(c1)+0.05; const L2 = relativeLuma(c2)+0.05; return L1>L2? L1/L2 : L2/L1;
+  }
   function setAccent(color){
     if (!color) return;
     document.documentElement.style.setProperty('--accent', color);
     const rgb = hexToRgb(color);
-    const contrast = (rgb && relativeLuma(rgb) < 0.55) ? '#ffffff' : '#0b0e18';
-    document.documentElement.style.setProperty('--accent-contrast', contrast);
+    if (rgb){
+      const white = {r:255,g:255,b:255};
+      const dark = {r:11,g:14,b:24};
+      const cWhite = contrastRatio(rgb, white);
+      const cDark = contrastRatio(rgb, dark);
+      document.documentElement.style.setProperty('--accent-contrast', cWhite >= cDark ? '#ffffff' : '#0b0e18');
+    }
     try { localStorage.setItem('psadtAccent', color); } catch {}
     if (accentEl) accentEl.value = color;
   }
