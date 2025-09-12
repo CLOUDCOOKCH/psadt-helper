@@ -10,6 +10,7 @@ Getting started
 Notes
 - Uses PSADT 4.1.x function names (e.g., `Start-ADTMsiProcess`, `Start-ADTProcess`, `Show-ADTInstallationPrompt`).
 - Includes a converter to translate common PSADT 3.8/3.10 commands to 4.1 syntax.
+- The legacy converter now supports custom parameter mappings for additional 3.x parameters.
 - Scenarios now include presets for common silent switches, file copy and registry helpers, in addition to MSI and dialog helpers.
 - Search the scenario list, validate GUID fields, and manage a script queue with reordering/removal.
 - Scripts can be shared via a generated link, downloaded, or copied to the clipboard.
