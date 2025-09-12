@@ -1,4 +1,5 @@
 (() => {
+  const { setTelemetry, logEvent } = window;
   const listEl = document.getElementById('scenario-list');
   const searchEl = document.getElementById('scenario-search');
   const detailsEl = document.getElementById('scenario-details');
@@ -16,6 +17,14 @@
   const swatchesEl = document.getElementById('accent-swatches');
   const bgEl = document.getElementById('background');
   const bgSwatchesEl = document.getElementById('bg-swatches');
+  const telemetryToggle = document.getElementById('telemetry-toggle');
+  if (telemetryToggle) {
+    telemetryToggle.addEventListener('change', e => setTelemetry(e.target.checked));
+  }
+  document.querySelectorAll('img[data-hide-on-error]').forEach(img => {
+    img.addEventListener('error', () => img.classList.add('hidden'));
+  });
+
 
   let activeId = null;
   const scriptCommands = [];
@@ -229,6 +238,7 @@
   }
 
   copyBtn.addEventListener('click', async () => {
+    logEvent('copyCommand', { id: activeId });
     const txt = commandEl.textContent || '';
     if (!txt.trim()) return;
     try {
@@ -342,7 +352,7 @@
       const decoded = atob(initialState.get('script'));
       decoded.split('\n').forEach(c => { if (c.trim()) scriptCommands.push(c); });
       renderScript();
-    } catch {}
+    } catch (e) { /* ignore */ }
   }
 
   // Theming: accent color persistence and contrast handling
@@ -369,7 +379,7 @@
       const cDark = contrastRatio(rgb, dark);
       document.documentElement.style.setProperty('--accent-contrast', cWhite >= cDark ? '#ffffff' : '#0b0e18');
     }
-    try { localStorage.setItem('psadtAccent', color); } catch {}
+    try { localStorage.setItem('psadtAccent', color); } catch (e) { /* ignore */ }
     if (accentEl) accentEl.value = color;
   }
   function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
@@ -403,7 +413,7 @@
     document.documentElement.style.setProperty('--border', border);
     document.documentElement.style.setProperty('--text', text);
     document.documentElement.style.setProperty('--muted', muted);
-    try { localStorage.setItem('psadtBg', color); } catch {}
+    try { localStorage.setItem('psadtBg', color); } catch (e) { /* ignore */ }
     if (bgEl) bgEl.value = color;
   }
   const saved = (()=>{ try { return localStorage.getItem('psadtAccent'); } catch { return null } })();
