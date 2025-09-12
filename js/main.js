@@ -418,4 +418,16 @@
   if (bgSwatchesEl){ bgSwatchesEl.addEventListener('click', (e)=>{
     const btn = e.target.closest('.swatch'); if (!btn) return; const c = btn.getAttribute('data-color'); setBackground(c);
   }); }
+
+  // Hidden gimmick: classic Konami code reveals a surprise
+  const secret = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  const buffer = [];
+  window.addEventListener('keydown', (e) => {
+    buffer.push(e.key);
+    if (buffer.length > secret.length) buffer.shift();
+    if (secret.every((k,i) => k.toLowerCase() === (buffer[i] || '').toLowerCase())){
+      alert('🍕 You found the hidden pizza!');
+      buffer.length = 0;
+    }
+  });
 })();

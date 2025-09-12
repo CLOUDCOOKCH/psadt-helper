@@ -89,6 +89,7 @@ body{
   .script-btn{border:1px solid var(--border);background:#ffffff;border-radius:6px;padding:2px 6px;cursor:pointer}
   .script-btn:hover{background:#F6F6FF}
 
+  .cmd-search{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
   .cmd-boxes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
   .cmd-box{background:#ffffff;border:1px solid var(--border);border-radius:6px;padding:6px 8px;cursor:grab;font-size:12px}
   .cmd-editor{min-height:80px;background:#ffffff;border:1px dashed var(--border);border-radius:10px;padding:12px;white-space:pre-wrap}
