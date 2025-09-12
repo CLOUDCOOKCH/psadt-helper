@@ -54,4 +54,13 @@ assert.strictEqual(
   "Copy-ADTFile -Path \"$adtSession.DirFiles\\a.txt\" -Destination 'C\\Temp' -Overwrite"
 );
 
+// Custom mapping for legacy conversion
+const withExtra = convertLegacyCommand('Execute-Process -Path test.exe -Foo 1', [
+  ['-Foo', '-Bar']
+]);
+assert.strictEqual(
+  withExtra,
+  'Start-ADTProcess -FilePath test.exe -Bar 1'
+);
+
 console.log('All tests passed.');

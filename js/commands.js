@@ -57,7 +57,7 @@ function joinPathArray(baseVar, listText) {
 
 // Convert a PSADT 3.8/3.10 command to PSADT 4.1 syntax.
 // Performs simple token replacements for function and parameter names.
-function convertLegacyCommand(cmd) {
+function convertLegacyCommand(cmd, extraParamMap = []) {
   if (!cmd) return '';
   let out = String(cmd);
   const fnMap = [
@@ -80,8 +80,11 @@ function convertLegacyCommand(cmd) {
     ['-CloseApps', '-CloseProcesses'],
     ['-ProgressPercentage', '-StatusBarPercentage']
   ];
+  const combinedMap = Array.isArray(extraParamMap)
+    ? paramMap.concat(extraParamMap.filter(p => Array.isArray(p) && p.length === 2))
+    : paramMap;
   // Avoid lookbehind for Safari compatibility: capture possible prefix and reinsert
-  paramMap.forEach(([oldName, newName]) => {
+  combinedMap.forEach(([oldName, newName]) => {
     const re = new RegExp(`(^|[^\\w-])${oldName}(?=\\s|$)`, 'gi');
     out = out.replace(re, (m, p1) => `${p1}${newName}`);
   });
@@ -94,9 +97,21 @@ const PSADT_SCENARIOS = [
     name: 'Convert 3.x Command',
     description: 'Convert a PSADT 3.8/3.10 command to PSADT 4.1 syntax.',
     fields: [
-      { id: 'legacy', label: 'Legacy Command', type: 'textarea', required: true }
+      { id: 'legacy', label: 'Legacy Command', type: 'textarea', required: true },
+      { id: 'extraParams', label: 'Extra Parameter Mappings (old=new per line)', type: 'textarea', required: false }
     ],
-    build: (v) => convertLegacyCommand(v.legacy)
+    build: (v) => {
+      const extra = String(v.extraParams || '')
+        .split(/\n/)
+        .map(s => s.trim())
+        .filter(Boolean)
+        .map(line => {
+          const [oldName, newName] = line.split('=').map(x => x.trim());
+          return oldName && newName ? [oldName, newName] : null;
+        })
+        .filter(Boolean);
+      return convertLegacyCommand(v.legacy, extra);
+    }
   },
   // MSI operations via Start-ADTMsiProcess
   {
