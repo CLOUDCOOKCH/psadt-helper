@@ -8,6 +8,8 @@
   const introEl = document.getElementById('intro');
   const copyBtn = document.getElementById('copy-btn');
   const addBtn = document.getElementById('add-btn');
+  const shareBtn = document.getElementById('share-btn');
+  const resetBtn = document.getElementById('reset-btn');
   const scriptEl = document.getElementById('script');
   const scriptCommandsEl = document.getElementById('script-commands');
   const copyScriptBtn = document.getElementById('copy-script-btn');
@@ -200,12 +202,7 @@
     }
 
     function updateHash(v){
-      const params = new URLSearchParams({ scenario: s.id });
-      Object.entries(v).forEach(([k,val]) => {
-        if (!val) return;
-        params.set(k, Array.isArray(val) ? val.join(',') : val);
-      });
-      location.hash = params.toString();
+      location.hash = window.buildScenarioHash(s.id, v);
     }
 
     function updateCommand(){
@@ -232,6 +229,32 @@
         commandEl.textContent = `// Error generating command: ${e.message}`;
       }
       updateHash(values);
+    }
+
+    if (shareBtn){
+      shareBtn.onclick = async () => {
+        const vals = getValues();
+        const hash = window.buildScenarioHash(s.id, vals);
+        const url = `${location.origin}${location.pathname}#${hash}`;
+        try {
+          await navigator.clipboard.writeText(url);
+          shareBtn.textContent = 'Link Copied!';
+          setTimeout(()=>{ shareBtn.textContent = 'Permalink'; }, 1200);
+        } catch {
+          const ta = document.createElement('textarea');
+          ta.value = url; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); document.body.removeChild(ta);
+        }
+      };
+    }
+    if (resetBtn){
+      resetBtn.onclick = () => {
+        activeId = null;
+        detailsEl.classList.add('hidden');
+        outputEl.classList.add('hidden');
+        introEl.classList.remove('hidden');
+        location.hash = '';
+      };
     }
 
     updateCommand();
