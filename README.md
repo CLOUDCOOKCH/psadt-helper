@@ -16,6 +16,7 @@ This installs dependencies, runs JS tests and Pester tests.
 - `tests/js` - Jest tests for JS helpers
 - `tests/ps` - Pester tests
 - `reports` - audit reports
+- `docs/usage.md` - feature usage guide
 
 ## Architecture
 
