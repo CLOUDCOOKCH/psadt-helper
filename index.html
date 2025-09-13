@@ -3,56 +3,138 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:"
+    />
     <title>Cloudcook PSADT Helper</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <!-- SVG Icon Sprite -->
-    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-      <symbol id="ic-copy" viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></symbol>
-      <symbol id="ic-theme" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9a7 7 0 0 1-9-9Z"/></symbol>
-      <symbol id="ic-files" viewBox="0 0 24 24"><path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v14h2V4h8V2Zm4 4h-8a2 2 0 0 0-2 2v14h10a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Zm0 14H8V8h10v12Z"/></symbol>
-      <symbol id="ic-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7L8 5Z"/></symbol>
-      <symbol id="ic-download" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14v-2H5v2Zm7-18l-5 5h3v6h4V7h3l-5-5Z"/></symbol>
-      <symbol id="ic-edit" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82Z"/></symbol>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+      <symbol id="ic-copy" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"
+        />
+      </symbol>
+      <symbol id="ic-theme" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 3a9 9 0 1 0 9 9a7 7 0 0 1-9-9Z" />
+      </symbol>
+      <symbol id="ic-files" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          d="M14 2H6a2 2 0 0 0-2 2v14h2V4h8V2Zm4 4h-8a2 2 0 0 0-2 2v14h10a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Zm0 14H8V8h10v12Z"
+        />
+      </symbol>
+      <symbol id="ic-play" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M8 5v14l11-7L8 5Z" />
+      </symbol>
+      <symbol id="ic-download" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          d="M5 20h14v-2H5v2Zm7-18l-5 5h3v6h4V7h3l-5-5Z"
+        />
+      </symbol>
+      <symbol id="ic-edit" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82Z"
+        />
+      </symbol>
     </svg>
     <header class="app-header">
       <div class="brand">
-        <img class="logo" src="assets/cloudcook-logo.png" alt="Cloudcook" data-hide-on-error />
+        <img
+          class="logo"
+          src="assets/cloudcook-logo.png"
+          alt="Cloudcook"
+          data-hide-on-error
+        />
         <h1>Cloudcook PSADT Helper</h1>
-        <label for="telemetry-toggle" class="telemetry-toggle"><input type="checkbox" id="telemetry-toggle" /> Enable telemetry</label>
+        <label for="telemetry-toggle" class="telemetry-toggle"
+          ><input type="checkbox" id="telemetry-toggle" /> Enable
+          telemetry</label
+        >
       </div>
     </header>
 
-    <main class="layout layout-3">
+    <main class="layout layout-3" id="main-content" tabindex="-1">
       <aside class="sidebar" aria-label="Scenarios">
-        <input type="search" id="scenario-search" class="scenario-search" placeholder="Search" aria-label="Search scenarios" />
+        <input
+          type="search"
+          id="scenario-search"
+          class="scenario-search"
+          placeholder="Search"
+          aria-label="Search scenarios"
+        />
         <div id="scenario-list"></div>
       </aside>
 
       <section class="content">
         <div id="intro" class="intro">
-          <img src="assets/cloudcook-logo.png" alt="Cloudcook" class="intro-logo" data-hide-on-error />
-          <h2>Welcome to Cloudcook PSADT Helper <span aria-hidden="true">✨</span></h2>
-          <p>Build and share <strong>PowerShell App Deployment Toolkit</strong> commands.</p>
+          <img
+            src="assets/cloudcook-logo.png"
+            alt="Cloudcook"
+            class="intro-logo"
+            data-hide-on-error
+          />
+          <h2>
+            Welcome to Cloudcook PSADT Helper <span aria-hidden="true">✨</span>
+          </h2>
+          <p>
+            Build and share
+            <strong>PowerShell App Deployment Toolkit</strong> commands.
+          </p>
           <ul class="intro-steps">
-            <li><span class="emoji" aria-hidden="true">📂</span><span>Choose a scenario from the left.</span></li>
-            <li><span class="emoji" aria-hidden="true">🛠️</span><span>Fill in the required fields.</span></li>
-            <li><span class="emoji" aria-hidden="true">⚡</span><span>Click <strong>Add</strong> to queue it or <strong>Copy</strong> to grab the command.</span></li>
+            <li>
+              <span class="emoji" aria-hidden="true">📂</span
+              ><span>Choose a scenario from the left.</span>
+            </li>
+            <li>
+              <span class="emoji" aria-hidden="true">🛠️</span
+              ><span>Fill in the required fields.</span>
+            </li>
+            <li>
+              <span class="emoji" aria-hidden="true">⚡</span
+              ><span
+                >Click <strong>Add</strong> to queue it or
+                <strong>Copy</strong> to grab the command.</span
+              >
+            </li>
           </ul>
         </div>
         <div id="scenario-details" class="card hidden"></div>
         <div id="output" class="card hidden">
           <div class="output-toolbar">
             <span class="output-title">Generated Command</span>
-            <div style="display:flex;gap:8px">
-              <button id="add-btn" class="btn"><svg class="icon"><use href="#ic-play"/></svg><span>Add</span></button>
-              <button id="copy-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy</span></button>
-              <button id="share-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Permalink</span></button>
-              <button id="export-btn" class="btn"><svg class="icon"><use href="#ic-download"/></svg><span>Export</span></button>
-              <button id="import-btn" class="btn"><svg class="icon"><use href="#ic-files"/></svg><span>Import</span></button>
-              <input type="file" id="import-file" accept="application/json" hidden />
+            <div style="display: flex; gap: 8px">
+              <button id="add-btn" class="btn">
+                <svg class="icon"><use href="#ic-play" /></svg><span>Add</span>
+              </button>
+              <button id="copy-btn" class="btn">
+                <svg class="icon"><use href="#ic-copy" /></svg><span>Copy</span>
+              </button>
+              <button id="share-btn" class="btn">
+                <svg class="icon"><use href="#ic-copy" /></svg
+                ><span>Permalink</span>
+              </button>
+              <button id="export-btn" class="btn">
+                <svg class="icon"><use href="#ic-download" /></svg
+                ><span>Export</span>
+              </button>
+              <button id="import-btn" class="btn">
+                <svg class="icon"><use href="#ic-files" /></svg
+                ><span>Import</span>
+              </button>
+              <input
+                type="file"
+                id="import-file"
+                accept="application/json"
+                hidden
+              />
               <button id="reset-btn" class="btn"><span>Reset</span></button>
             </div>
           </div>
@@ -61,10 +143,19 @@
         <div id="script" class="card hidden">
           <div class="output-toolbar">
             <span class="output-title">Script</span>
-            <div style="display:flex;gap:8px">
-              <button id="share-script-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy Link</span></button>
-              <button id="download-script-btn" class="btn"><svg class="icon"><use href="#ic-download"/></svg><span>Download</span></button>
-              <button id="copy-script-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy Script</span></button>
+            <div style="display: flex; gap: 8px">
+              <button id="share-script-btn" class="btn">
+                <svg class="icon"><use href="#ic-copy" /></svg
+                ><span>Copy Link</span>
+              </button>
+              <button id="download-script-btn" class="btn">
+                <svg class="icon"><use href="#ic-download" /></svg
+                ><span>Download</span>
+              </button>
+              <button id="copy-script-btn" class="btn">
+                <svg class="icon"><use href="#ic-copy" /></svg
+                ><span>Copy Script</span>
+              </button>
             </div>
           </div>
           <div id="script-commands" aria-live="polite"></div>
@@ -73,9 +164,24 @@
           <div class="output-toolbar">
             <span class="output-title">Command Builder</span>
           </div>
-          <input type="search" id="command-search" class="cmd-search" placeholder="Search commands" aria-label="Search commands" />
-          <div id="command-boxes" class="cmd-boxes" aria-label="PSADT commands"></div>
-          <div id="editor-area" class="cmd-editor" contenteditable="true" aria-label="Custom script editor"></div>
+          <input
+            type="search"
+            id="command-search"
+            class="cmd-search"
+            placeholder="Search commands"
+            aria-label="Search commands"
+          />
+          <div
+            id="command-boxes"
+            class="cmd-boxes"
+            aria-label="PSADT commands"
+          ></div>
+          <div
+            id="editor-area"
+            class="cmd-editor"
+            contenteditable="true"
+            aria-label="Custom script editor"
+          ></div>
         </div>
         <div id="empty" class="empty">
           <p>Select a scenario to begin.</p>
@@ -84,32 +190,122 @@
 
       <aside class="tools" aria-label="Tools">
         <div class="card">
-          <h3 class="card-title"><svg class="icon"><use href="#ic-theme"/></svg><span>Theme</span></h3>
+          <h3 class="card-title">
+            <svg class="icon"><use href="#ic-theme" /></svg><span>Theme</span>
+          </h3>
           <div class="theme-picker" title="Choose accent color">
             <span class="theme-label">Accent</span>
-            <div class="swatches" id="accent-swatches" aria-label="Accent presets">
-              <button class="swatch" data-color="#175BEB" style="--c:#175BEB" aria-label="Brand Blue"></button>
-              <button class="swatch" data-color="#4776E6" style="--c:#4776E6" aria-label="Blue"></button>
-              <button class="swatch" data-color="#8E54E9" style="--c:#8E54E9" aria-label="Violet"></button>
-              <button class="swatch" data-color="#EC008C" style="--c:#EC008C" aria-label="Magenta"></button>
-              <button class="swatch" data-color="#FFC225" style="--c:#FFC225" aria-label="Gold"></button>
-              <button class="swatch" data-color="#1FB381" style="--c:#1FB381" aria-label="Green"></button>
+            <div
+              class="swatches"
+              id="accent-swatches"
+              aria-label="Accent presets"
+            >
+              <button
+                class="swatch"
+                data-color="#175BEB"
+                style="--c: #175beb"
+                aria-label="Brand Blue"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#4776E6"
+                style="--c: #4776e6"
+                aria-label="Blue"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#8E54E9"
+                style="--c: #8e54e9"
+                aria-label="Violet"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#EC008C"
+                style="--c: #ec008c"
+                aria-label="Magenta"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#FFC225"
+                style="--c: #ffc225"
+                aria-label="Gold"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#1FB381"
+                style="--c: #1fb381"
+                aria-label="Green"
+              ></button>
             </div>
-            <input id="accent" class="accent" type="color" value="#175BEB" aria-label="Custom accent color" />
+            <input
+              id="accent"
+              class="accent"
+              type="color"
+              value="#175BEB"
+              aria-label="Custom accent color"
+            />
           </div>
-          <div class="theme-picker" title="Choose background color" style="margin-top:8px">
+          <div
+            class="theme-picker"
+            title="Choose background color"
+            style="margin-top: 8px"
+          >
             <span class="theme-label">Background</span>
-            <div class="swatches" id="bg-swatches" aria-label="Background presets">
-              <button class="swatch" data-color="#FAF8FF" style="--c:#FAF8FF" aria-label="Cloudcook Base"></button>
-              <button class="swatch" data-color="#FFFFFF" style="--c:#FFFFFF" aria-label="White"></button>
-              <button class="swatch" data-color="#E9E8FF" style="--c:#E9E8FF" aria-label="Lavender"></button>
-              <button class="swatch" data-color="#FFFDF7" style="--c:#FFFDF7" aria-label="Ivory"></button>
-              <button class="swatch" data-color="#F6F6FF" style="--c:#F6F6FF" aria-label="Mist"></button>
-              <button class="swatch" data-color="#F3F1FE" style="--c:#F3F1FE" aria-label="Lilac"></button>
+            <div
+              class="swatches"
+              id="bg-swatches"
+              aria-label="Background presets"
+            >
+              <button
+                class="swatch"
+                data-color="#FAF8FF"
+                style="--c: #faf8ff"
+                aria-label="Cloudcook Base"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#FFFFFF"
+                style="--c: #ffffff"
+                aria-label="White"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#E9E8FF"
+                style="--c: #e9e8ff"
+                aria-label="Lavender"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#FFFDF7"
+                style="--c: #fffdf7"
+                aria-label="Ivory"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#F6F6FF"
+                style="--c: #f6f6ff"
+                aria-label="Mist"
+              ></button>
+              <button
+                class="swatch"
+                data-color="#F3F1FE"
+                style="--c: #f3f1fe"
+                aria-label="Lilac"
+              ></button>
             </div>
-            <input id="background" class="accent" type="color" value="#FAF8FF" aria-label="Custom background color" />
+            <input
+              id="background"
+              class="accent"
+              type="color"
+              value="#FAF8FF"
+              aria-label="Custom background color"
+            />
           </div>
-          <div class="theme-picker" title="Choose color mode" style="margin-top:8px">
+          <div
+            class="theme-picker"
+            title="Choose color mode"
+            style="margin-top: 8px"
+          >
             <span class="theme-label">Mode</span>
             <select id="color-mode" aria-label="Color mode">
               <option value="auto">Auto</option>
@@ -119,16 +315,22 @@
             </select>
           </div>
         </div>
-        
       </aside>
     </main>
 
     <footer class="footer">
       <span>Cloudcook PSADT Helper</span>
       <span>·</span>
-      <a href="https://psappdeploytoolkit.com/" target="_blank" rel="noreferrer">PSADT Docs</a>
+      <a href="https://psappdeploytoolkit.com/" target="_blank" rel="noreferrer"
+        >PSADT Docs</a
+      >
       <span>·</span>
-      <a href="https://github.com/PSAppDeployToolkit/PSAppDeployToolkit" target="_blank" rel="noreferrer">GitHub</a>
+      <a
+        href="https://github.com/PSAppDeployToolkit/PSAppDeployToolkit"
+        target="_blank"
+        rel="noreferrer"
+        >GitHub</a
+      >
     </footer>
 
     <script src="src/js/telemetry.js"></script>
@@ -136,6 +338,5 @@
     <script src="src/js/state.js"></script>
     <script src="src/js/main.js"></script>
     <script src="src/js/editor.js"></script>
-
   </body>
-  </html>
+</html>
