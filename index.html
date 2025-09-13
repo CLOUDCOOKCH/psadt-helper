@@ -50,6 +50,9 @@
               <button id="add-btn" class="btn"><svg class="icon"><use href="#ic-play"/></svg><span>Add</span></button>
               <button id="copy-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Copy</span></button>
               <button id="share-btn" class="btn"><svg class="icon"><use href="#ic-copy"/></svg><span>Permalink</span></button>
+              <button id="export-btn" class="btn"><svg class="icon"><use href="#ic-download"/></svg><span>Export</span></button>
+              <button id="import-btn" class="btn"><svg class="icon"><use href="#ic-files"/></svg><span>Import</span></button>
+              <input type="file" id="import-file" accept="application/json" hidden />
               <button id="reset-btn" class="btn"><span>Reset</span></button>
             </div>
           </div>
@@ -105,6 +108,15 @@
               <button class="swatch" data-color="#F3F1FE" style="--c:#F3F1FE" aria-label="Lilac"></button>
             </div>
             <input id="background" class="accent" type="color" value="#FAF8FF" aria-label="Custom background color" />
+          </div>
+          <div class="theme-picker" title="Choose color mode" style="margin-top:8px">
+            <span class="theme-label">Mode</span>
+            <select id="color-mode" aria-label="Color mode">
+              <option value="auto">Auto</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="hc">High Contrast</option>
+            </select>
           </div>
         </div>
         

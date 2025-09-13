@@ -31,4 +31,28 @@ describe('PSADT commands', () => {
     ]);
     expect(withExtra).toBe('Start-ADTProcess -FilePath test.exe -Bar 1');
   });
+
+  test('builds EXE install command', () => {
+    const exe = PSADT_SCENARIOS.find(s => s.id === 'exe-install');
+    const cmd = exe.build({
+      filePathBase: '$adtSession.DirFiles',
+      filePath: 'setup.exe',
+      silent: '/S',
+      installDir: 'C:\\App',
+      reboot: 'Default'
+    });
+    expect(cmd).toBe('Start-ADTProcess -FilePath "$adtSession.DirFiles\\setup.exe" -ArgumentList \'/S INSTALLDIR="C:\\App"\'');
+  });
+
+  test('builds winget install command', () => {
+    const w = PSADT_SCENARIOS.find(s => s.id === 'winget-install');
+    const cmd = w.build({
+      package: 'Vendor.App',
+      silent: '--silent',
+      installDir: 'C:\\Apps',
+      reboot: 'Suppress'
+    });
+    expect(cmd).toBe('Start-ADTProcess -FilePath winget -ArgumentList \'install Vendor.App --silent --location "C:\\Apps" --no-restart\'');
+  });
 });
+
