@@ -17,6 +17,7 @@ This installs dependencies, runs JS tests and Pester tests.
 - `tests/ps` - Pester tests
 - `reports` - audit reports
 - `docs/usage.md` - feature usage guide
+- `docs/roadmap.md` - upcoming features roadmap
 
 ## Architecture
 

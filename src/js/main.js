@@ -10,6 +10,9 @@
   const addBtn = document.getElementById('add-btn');
   const shareBtn = document.getElementById('share-btn');
   const resetBtn = document.getElementById('reset-btn');
+  const exportBtn = document.getElementById('export-btn');
+  const importBtn = document.getElementById('import-btn');
+  const importFile = document.getElementById('import-file');
   const scriptEl = document.getElementById('script');
   const scriptCommandsEl = document.getElementById('script-commands');
   const copyScriptBtn = document.getElementById('copy-script-btn');
@@ -19,6 +22,7 @@
   const swatchesEl = document.getElementById('accent-swatches');
   const bgEl = document.getElementById('background');
   const bgSwatchesEl = document.getElementById('bg-swatches');
+  const modeSel = document.getElementById('color-mode');
   const telemetryToggle = document.getElementById('telemetry-toggle');
   if (telemetryToggle) {
     telemetryToggle.addEventListener('change', e => setTelemetry(e.target.checked));
@@ -26,6 +30,24 @@
   document.querySelectorAll('img[data-hide-on-error]').forEach(img => {
     img.addEventListener('error', () => img.classList.add('hidden'));
   });
+
+  function applyMode(mode){
+    document.documentElement.removeAttribute('data-theme');
+    if (mode === 'dark' || mode === 'hc'){
+      document.documentElement.setAttribute('data-theme', mode);
+    }
+  }
+  if (modeSel){
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const saved = localStorage.getItem('color-mode') || 'auto';
+    modeSel.value = saved;
+    applyMode(saved === 'auto' ? (prefersDark ? 'dark' : 'light') : saved);
+    modeSel.addEventListener('change', e => {
+      const val = e.target.value;
+      localStorage.setItem('color-mode', val);
+      applyMode(val === 'auto' ? (prefersDark ? 'dark' : 'light') : val);
+    });
+  }
 
 
   let activeId = null;
@@ -247,6 +269,19 @@
         }
       };
     }
+    if (exportBtn){
+      exportBtn.onclick = () => {
+        const data = { id: s.id, values: getValues() };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${s.id}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+      };
+    }
     if (resetBtn){
       resetBtn.onclick = () => {
         activeId = null;
@@ -258,6 +293,23 @@
     }
 
     updateCommand();
+  }
+
+  if (importBtn && importFile){
+    importBtn.addEventListener('click', () => importFile.click());
+    importFile.addEventListener('change', () => {
+      const file = importFile.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (data.id) selectScenario(data.id, data.values || {});
+        } catch (e){ console.error(e); }
+      };
+      reader.readAsText(file);
+      importFile.value = '';
+    });
   }
 
   copyBtn.addEventListener('click', async () => {

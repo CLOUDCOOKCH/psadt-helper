@@ -226,6 +226,66 @@ const PSADT_SCENARIOS = [
     }
   },
 
+  // Common installer templates
+  {
+    id: 'exe-install',
+    name: 'EXE: Install',
+    description: 'Run a setup EXE with common silent options.',
+    fields: [
+      { id: 'filePath', label: 'Setup EXE', type: 'text', required: true, placeholder: 'setup.exe', fileBase: true },
+      { id: 'silent', label: 'Silent Switch', type: 'text', required: false, placeholder: '/S' },
+      { id: 'installDir', label: 'InstallDir', type: 'text', required: false, placeholder: 'C\\Program Files\\App' },
+      { id: 'reboot', label: 'Reboot Behavior', type: 'select', options: ['Default','Force','Suppress'] }
+    ],
+    build: (v) => {
+      const parts = ["Start-ADTProcess", `-FilePath ${joinPath(v.filePathBase, v.filePath)}`];
+      const args = [];
+      if (v.silent) args.push(v.silent);
+      if (v.installDir) args.push(`INSTALLDIR="${psq(v.installDir)}"`);
+      if (args.length) parts.push(`-ArgumentList '${psq(args.join(' '))}'`);
+      if (v.reboot === 'Force') parts.push('-WaitForExit');
+      if (v.reboot === 'Suppress') parts.push('-NoWait');
+      return parts.join(' ');
+    }
+  },
+  {
+    id: 'msix-install',
+    name: 'MSIX: Install',
+    description: 'Install an MSIX package using Add-AppxPackage.',
+    fields: [
+      { id: 'filePath', label: 'MSIX File', type: 'text', required: true, placeholder: 'app.msix', fileBase: true },
+      { id: 'installDir', label: 'InstallDir', type: 'text', required: false, placeholder: 'C\\Program Files\\App' },
+      { id: 'reboot', label: 'Reboot Behavior', type: 'select', options: ['Default','Force','Suppress'] }
+    ],
+    build: (v) => {
+      const parts = ["Add-AppxPackage", joinPath(v.filePathBase, v.filePath)];
+      if (v.installDir) parts.push(`-InstallLocation '${psq(v.installDir)}'`);
+      if (v.reboot === 'Suppress') parts.push('-NoRestart');
+      return parts.join(' ');
+    }
+  },
+  {
+    id: 'winget-install',
+    name: 'winget: Install',
+    description: 'Use winget to install a package silently.',
+    fields: [
+      { id: 'package', label: 'Package Id', type: 'text', required: true, placeholder: 'Vendor.App' },
+      { id: 'silent', label: 'Silent Switch', type: 'text', required: false, placeholder: '--silent' },
+      { id: 'installDir', label: 'InstallDir', type: 'text', required: false, placeholder: 'C\\Program Files\\App' },
+      { id: 'reboot', label: 'Reboot Behavior', type: 'select', options: ['Default','Force','Suppress'] }
+    ],
+    build: (v) => {
+      const parts = ["Start-ADTProcess", `-FilePath winget`];
+      const args = ['install', v.package];
+      if (v.silent) args.push(v.silent);
+      if (v.installDir) args.push(`--location "${psq(v.installDir)}"`);
+      if (v.reboot === 'Suppress') args.push('--no-restart');
+      if (v.reboot === 'Force') args.push('--force');
+      parts.push(`-ArgumentList '${psq(args.join(' '))}'`);
+      return parts.join(' ');
+    }
+  },
+
   // Generic process (system)
   {
     id: 'process-system',
