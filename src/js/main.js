@@ -18,7 +18,6 @@
   const copyScriptBtn = document.getElementById('copy-script-btn');
   const downloadScriptBtn = document.getElementById('download-script-btn');
   const shareScriptBtn = document.getElementById('share-script-btn');
-  const variableSearchEl = document.getElementById('variable-search');
   const variableResultsEl = document.getElementById('variable-results');
   const variableDetailEl = document.getElementById('variable-detail');
   const variableCountEl = document.getElementById('variable-count');
@@ -199,35 +198,23 @@
 
   function renderVariableHelper() {
     if (!variableResultsEl) return;
-    const term = (variableSearchEl?.value || '').trim().toLowerCase();
     variableResultsEl.innerHTML = '';
 
     const sections = variableData
-      .map((section) => {
-        const list = Array.isArray(section.variables) ? section.variables : [];
-        const matches = term
-          ? list.filter((item) => {
-              const name = (item.variable || '').toLowerCase();
-              const desc = (item.description || '').toLowerCase();
-              return name.includes(term) || desc.includes(term);
-            })
-          : list;
-        return { ...section, matches };
-      })
+      .map((section) => ({
+        ...section,
+        matches: Array.isArray(section.variables) ? section.variables : [],
+      }))
       .filter((section) => section.matches.length);
 
     if (!sections.length) {
       const empty = document.createElement('p');
       empty.className = 'variable-empty';
-      empty.textContent = term
-        ? 'No variables match your search.'
-        : 'Variable reference is unavailable.';
+      empty.textContent = 'Variable reference is unavailable.';
       variableResultsEl.appendChild(empty);
       activeVariableKey = null;
       activeVariableButton = null;
-      setVariableDetail(
-        term ? 'No variables match your search.' : 'Select a variable to see details.',
-      );
+      setVariableDetail('Select a variable to see details.');
       return;
     }
 
@@ -280,9 +267,6 @@
 
   if (variableResultsEl) {
     renderVariableHelper();
-  }
-  if (variableSearchEl) {
-    variableSearchEl.addEventListener('input', renderVariableHelper);
   }
 
   const initialState = new URLSearchParams(location.hash.slice(1));
