@@ -7,6 +7,7 @@
   const commandSearchEl = document.getElementById('command-search');
   const outputEl = document.getElementById('output');
   const introEl = document.getElementById('intro');
+  const heroPrimaryEl = introEl ? introEl.querySelector('.hero') : null;
   const copyBtn = document.getElementById('copy-btn');
   const addBtn = document.getElementById('add-btn');
   const shareBtn = document.getElementById('share-btn');
@@ -682,7 +683,12 @@
     const s = list.find((x) => x.id === id);
     if (!s) return;
 
-    introEl.classList.add('hidden');
+    if (heroPrimaryEl) {
+      heroPrimaryEl.classList.add('hidden');
+      introEl.classList.remove('hidden');
+    } else if (introEl) {
+      introEl.classList.add('hidden');
+    }
     detailsEl.classList.remove('hidden');
     outputEl.classList.remove('hidden');
 
@@ -911,7 +917,12 @@
         activeId = null;
         detailsEl.classList.add('hidden');
         outputEl.classList.add('hidden');
-        introEl.classList.remove('hidden');
+        if (heroPrimaryEl) {
+          heroPrimaryEl.classList.remove('hidden');
+        }
+        if (introEl) {
+          introEl.classList.remove('hidden');
+        }
         location.hash = '';
       };
     }
