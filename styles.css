@@ -677,9 +677,10 @@ ul {
   }
 }
 
-@media (min-width: 1180px) {
+@media (min-width: 880px) {
   .hero-layout {
-    grid-template-columns: minmax(0, 320px) minmax(0, 1fr) minmax(0, 320px);
+    grid-template-columns: minmax(0, clamp(220px, 22vw, 280px)) minmax(0, 1fr)
+      minmax(0, clamp(220px, 22vw, 280px));
     grid-template-areas: 'scenarios hero variables';
     align-items: stretch;
   }
