@@ -39,7 +39,8 @@ function formatBase(baseVar) {
     ? baseVar.trim()
     : '$adtSession.DirFiles';
   if (base.startsWith('$(')) return base;
-  if (base.startsWith('$')) return `$(${base})`;
+  const bareVariablePattern = /^\$[A-Za-z_][\w:]*([.][A-Za-z_][\w]*)*$/;
+  if (bareVariablePattern.test(base)) return `$(${base})`;
   return base;
 }
 
