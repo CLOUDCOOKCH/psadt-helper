@@ -65,34 +65,59 @@ function joinPathArray(baseVar, listText) {
   return items.length ? `@(${items.join(', ')})` : '';
 }
 
+const legacyMapping = (() => {
+  if (typeof window !== 'undefined' && window.LEGACY_MAPPING) {
+    return window.LEGACY_MAPPING;
+  }
+  if (typeof module !== 'undefined' && module.exports) {
+    try {
+      // eslint-disable-next-line global-require
+      return require('./legacy-mapping.js');
+    } catch (err) {
+      // ignore and use fallback
+    }
+  }
+  return null;
+})();
+
+const FALLBACK_FUNCTION_MAP = [
+  ['Execute-MSI', 'Start-ADTMsiProcess'],
+  ['Execute-MSP', 'Start-ADTMspProcess'],
+  ['Execute-Process', 'Start-ADTProcess'],
+  ['Show-InstallationWelcome', 'Show-ADTInstallationWelcome'],
+  ['Show-InstallationPrompt', 'Show-ADTInstallationPrompt'],
+  ['Show-InstallationProgress', 'Show-ADTInstallationProgress'],
+  ['Show-InstallationRestartPrompt', 'Show-ADTInstallationRestartPrompt']
+];
+
+const FALLBACK_PARAMETER_MAP = [
+  ['-Path', '-FilePath'],
+  ['-Parameters', '-ArgumentList'],
+  ['-Transform', '-Transforms'],
+  ['-LogName', '-LogFileName'],
+  ['-CloseApps', '-CloseProcesses'],
+  ['-ProgressPercentage', '-StatusBarPercentage']
+];
+
+const FUNCTION_MAP = legacyMapping && Array.isArray(legacyMapping.functionMap) && legacyMapping.functionMap.length
+  ? legacyMapping.functionMap.filter(pair => Array.isArray(pair) && pair.length === 2)
+  : FALLBACK_FUNCTION_MAP;
+
+const PARAMETER_MAP = legacyMapping && Array.isArray(legacyMapping.parameterMap) && legacyMapping.parameterMap.length
+  ? legacyMapping.parameterMap.filter(pair => Array.isArray(pair) && pair.length === 2)
+  : FALLBACK_PARAMETER_MAP;
+
 // Convert a PSADT 3.8/3.10 command to PSADT 4.1 syntax.
 // Performs simple token replacements for function and parameter names.
 function convertLegacyCommand(cmd, extraParamMap = []) {
   if (!cmd) return '';
   let out = String(cmd);
-  const fnMap = [
-    ['Execute-MSI', 'Start-ADTMsiProcess'],
-    ['Execute-MSP', 'Start-ADTMspProcess'],
-    ['Execute-Process', 'Start-ADTProcess'],
-    ['Show-InstallationWelcome', 'Show-ADTInstallationWelcome'],
-    ['Show-InstallationPrompt', 'Show-ADTInstallationPrompt'],
-    ['Show-InstallationProgress', 'Show-ADTInstallationProgress'],
-    ['Show-InstallationRestartPrompt', 'Show-ADTInstallationRestartPrompt']
-  ];
-  fnMap.forEach(([oldName, newName]) => {
+  FUNCTION_MAP.forEach(([oldName, newName]) => {
     out = out.replace(new RegExp(`\\b${oldName}\\b`, 'gi'), newName);
   });
-  const paramMap = [
-    ['-Path', '-FilePath'],
-    ['-Parameters', '-ArgumentList'],
-    ['-Transform', '-Transforms'],
-    ['-LogName', '-LogFileName'],
-    ['-CloseApps', '-CloseProcesses'],
-    ['-ProgressPercentage', '-StatusBarPercentage']
-  ];
   const combinedMap = Array.isArray(extraParamMap)
-    ? paramMap.concat(extraParamMap.filter(p => Array.isArray(p) && p.length === 2))
-    : paramMap;
+    ? PARAMETER_MAP.concat(extraParamMap.filter(p => Array.isArray(p) && p.length === 2))
+    : PARAMETER_MAP;
   // Avoid lookbehind for Safari compatibility: capture possible prefix and reinsert
   combinedMap.forEach(([oldName, newName]) => {
     const re = new RegExp(`(^|[^\\w-])${oldName}(?=\\s|$)`, 'gi');
