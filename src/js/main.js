@@ -78,6 +78,15 @@
   }
 
   let activeId = null;
+  const favoriteStore =
+    typeof window.createFavoriteStore === 'function'
+      ? window.createFavoriteStore(window.localStorage)
+      : {
+          toggle: () => false,
+          getAll: () => [],
+        };
+  let showFavoritesOnly = false;
+  let favoritesOnlyInput = null;
   const scriptCommands = [];
   const variableData = Array.isArray(window.PSADT_VARIABLES)
     ? window.PSADT_VARIABLES
@@ -362,48 +371,110 @@
 
   const initialState = new URLSearchParams(location.hash.slice(1));
 
+  if (searchEl) {
+    const filter = document.createElement('label');
+    filter.className = 'favorites-filter';
+
+    favoritesOnlyInput = document.createElement('input');
+    favoritesOnlyInput.type = 'checkbox';
+    favoritesOnlyInput.id = 'favorites-only-toggle';
+    favoritesOnlyInput.addEventListener('change', (event) => {
+      showFavoritesOnly = event.target.checked;
+      renderList();
+    });
+
+    const filterText = document.createElement('span');
+    filterText.textContent = 'Favorites only';
+
+    filter.appendChild(favoritesOnlyInput);
+    filter.appendChild(filterText);
+
+    searchEl.insertAdjacentElement('afterend', filter);
+  }
+
   function renderList() {
-    listEl.innerHTML = '';
+    if (!listEl) return;
     const scenarios = Array.isArray(window.PSADT_SCENARIOS)
       ? window.PSADT_SCENARIOS
       : [];
-    const term = searchEl ? searchEl.value.toLowerCase() : '';
-    scenarios
-      .filter(
-        (s) =>
-          !term ||
-          s.name.toLowerCase().includes(term) ||
-          (s.description || '').toLowerCase().includes(term),
-      )
-      .forEach((s) => {
-        const item = document.createElement('div');
-        item.className = 'scenario-item' + (activeId === s.id ? ' active' : '');
-        item.tabIndex = 0;
-        item.setAttribute('role', 'button');
-        item.setAttribute('aria-pressed', activeId === s.id ? 'true' : 'false');
-        item.addEventListener('click', () => selectScenario(s.id));
-        item.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            selectScenario(s.id);
+    const term = searchEl ? searchEl.value : '';
+    const favorites =
+      favoriteStore && typeof favoriteStore.getAll === 'function'
+        ? favoriteStore.getAll()
+        : [];
+
+    if (favoritesOnlyInput) {
+      const hasFavorites = favorites.length > 0;
+      favoritesOnlyInput.disabled = !hasFavorites;
+      if (favoritesOnlyInput.parentElement) {
+        favoritesOnlyInput.parentElement.classList.toggle('is-disabled', !hasFavorites);
+      }
+      if (!hasFavorites && showFavoritesOnly) {
+        showFavoritesOnly = false;
+        favoritesOnlyInput.checked = false;
+      }
+    }
+
+    if (typeof window.renderScenarioList === 'function') {
+      window.renderScenarioList(listEl, {
+        scenarios,
+        term,
+        favorites,
+        showFavoritesOnly,
+        activeId,
+        onSelect: selectScenario,
+        onToggleFavorite: (id) => {
+          const favorite = favoriteStore.toggle(id);
+          if (typeof logEvent === 'function') {
+            logEvent('scenarioFavoriteToggle', { id, favorite });
           }
-        });
-        const name = document.createElement('span');
-        name.className = 'scenario-name';
-        name.textContent = s.name;
-        const desc = document.createElement('span');
-        desc.className = 'scenario-desc';
-        desc.textContent = s.description || '';
-        item.appendChild(name);
-        item.appendChild(desc);
-        listEl.appendChild(item);
+          renderList();
+        },
       });
-    if (!scenarios.length) {
+      return;
+    }
+
+    // Fallback rendering if the scenario list helper is unavailable.
+    listEl.innerHTML = '';
+    const normalizedTerm = term ? term.toLowerCase() : '';
+    const matches = scenarios.filter(
+      (s) =>
+        !normalizedTerm ||
+        s.name.toLowerCase().includes(normalizedTerm) ||
+        (s.description || '').toLowerCase().includes(normalizedTerm),
+    );
+    if (!matches.length) {
       const none = document.createElement('div');
       none.className = 'scenario-item';
-      none.textContent = 'No scenarios available.';
+      none.textContent = scenarios.length
+        ? 'No scenarios match your search.'
+        : 'No scenarios available.';
       listEl.appendChild(none);
+      return;
     }
+    matches.forEach((s) => {
+      const item = document.createElement('div');
+      item.className = 'scenario-item' + (activeId === s.id ? ' active' : '');
+      item.tabIndex = 0;
+      item.setAttribute('role', 'button');
+      item.setAttribute('aria-pressed', activeId === s.id ? 'true' : 'false');
+      item.addEventListener('click', () => selectScenario(s.id));
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectScenario(s.id);
+        }
+      });
+      const name = document.createElement('span');
+      name.className = 'scenario-name';
+      name.textContent = s.name;
+      const desc = document.createElement('span');
+      desc.className = 'scenario-desc';
+      desc.textContent = s.description || '';
+      item.appendChild(name);
+      item.appendChild(desc);
+      listEl.appendChild(item);
+    });
   }
 
   function selectScenario(id, preset = {}) {
