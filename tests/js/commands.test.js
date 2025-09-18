@@ -11,7 +11,7 @@ describe('PSADT commands', () => {
       argumentList: '',
       logFileName: ''
     });
-    expect(cmd).toBe('Start-ADTMsiProcess -Action Install -FilePath "$adtSession.DirFiles\\app.msi" -ArgumentList \'/qn\'');
+    expect(cmd).toBe('Start-ADTMsiProcess -Action Install -FilePath "$($adtSession.DirFiles)\\app.msi" -ArgumentList \'/qn\'');
   });
 
   test('converts legacy command', () => {
@@ -41,7 +41,7 @@ describe('PSADT commands', () => {
       installDir: 'C:\\App',
       reboot: 'Default'
     });
-    expect(cmd).toBe('Start-ADTProcess -FilePath "$adtSession.DirFiles\\setup.exe" -ArgumentList \'/S INSTALLDIR="C:\\App"\'');
+    expect(cmd).toBe('Start-ADTProcess -FilePath "$($adtSession.DirFiles)\\setup.exe" -ArgumentList \'/S INSTALLDIR="C:\\App"\'');
   });
 
   test('builds winget install command', () => {
