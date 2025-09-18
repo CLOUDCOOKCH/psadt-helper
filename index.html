@@ -359,6 +359,28 @@
       >
     </footer>
 
+    <div
+      id="variable-modal"
+      class="modal hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="variable-modal-title"
+    >
+      <div class="modal-overlay" data-modal-dismiss></div>
+      <div class="modal-container" role="document">
+        <button
+          type="button"
+          class="modal-close"
+          id="variable-modal-close"
+          data-modal-dismiss
+          aria-label="Close variable details"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div id="variable-modal-body" class="modal-body"></div>
+      </div>
+    </div>
+
     <script src="src/js/telemetry.js"></script>
     <script src="src/js/commands.js"></script>
     <script src="src/js/state.js"></script>
