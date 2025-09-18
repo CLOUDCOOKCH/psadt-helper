@@ -20,6 +20,7 @@
   const shareScriptBtn = document.getElementById('share-script-btn');
   const variableSearchEl = document.getElementById('variable-search');
   const variableResultsEl = document.getElementById('variable-results');
+  const variableDetailEl = document.getElementById('variable-detail');
   const variableCountEl = document.getElementById('variable-count');
   const accentEl = document.getElementById('accent');
   const swatchesEl = document.getElementById('accent-swatches');
@@ -96,6 +97,106 @@
     }
   }
 
+  let activeVariableKey = null;
+  let activeVariableButton = null;
+
+  function setVariableDetail(message) {
+    if (!variableDetailEl) return;
+    variableDetailEl.classList.add('empty');
+    variableDetailEl.innerHTML = '';
+    const empty = document.createElement('p');
+    empty.className = 'variable-empty';
+    empty.textContent = message;
+    variableDetailEl.appendChild(empty);
+  }
+
+  function showVariableDetail(item, section, key, button) {
+    if (!variableDetailEl) return;
+    if (activeVariableButton && activeVariableButton !== button) {
+      activeVariableButton.classList.remove('active');
+    }
+    if (button) {
+      button.classList.add('active');
+      activeVariableButton = button;
+    }
+    activeVariableKey = key;
+
+    variableDetailEl.classList.remove('empty');
+    variableDetailEl.innerHTML = '';
+
+    const header = document.createElement('div');
+    header.className = 'variable-detail-header';
+
+    const titleGroup = document.createElement('div');
+    titleGroup.className = 'variable-detail-title';
+    const code = document.createElement('code');
+    code.textContent = item.variable;
+    titleGroup.appendChild(code);
+    if (section.title) {
+      const badge = document.createElement('span');
+      badge.className = 'variable-section-badge';
+      badge.textContent = section.title;
+      titleGroup.appendChild(badge);
+    }
+    header.appendChild(titleGroup);
+
+    const actions = document.createElement('div');
+    actions.className = 'variable-detail-actions';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'variable-copy-btn';
+    btn.setAttribute('aria-label', `Copy ${item.variable}`);
+    btn.innerHTML =
+      '<svg class="icon"><use href="#ic-copy"></use></svg><span>Copy</span>';
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const success = await copyText(item.variable);
+      if (success) {
+        btn.classList.add('copied');
+        const span = btn.querySelector('span');
+        if (span) span.textContent = 'Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          if (span) span.textContent = 'Copy';
+        }, 1200);
+      }
+    });
+    actions.appendChild(btn);
+    header.appendChild(actions);
+    variableDetailEl.appendChild(header);
+
+    const descGroup = document.createElement('div');
+    descGroup.className = 'variable-meta';
+    const descLabel = document.createElement('span');
+    descLabel.className = 'variable-meta-label';
+    descLabel.textContent = 'Description';
+    const desc = document.createElement('p');
+    desc.className = 'variable-description';
+    desc.textContent = item.description || 'No description available.';
+    descGroup.appendChild(descLabel);
+    descGroup.appendChild(desc);
+    variableDetailEl.appendChild(descGroup);
+
+    const usageGroup = document.createElement('div');
+    usageGroup.className = 'variable-meta';
+    const usageLabel = document.createElement('span');
+    usageLabel.className = 'variable-meta-label';
+    usageLabel.textContent = 'How to use';
+    const usage = document.createElement('p');
+    usage.className = 'variable-usage';
+    if (item.usage) {
+      usage.innerHTML = item.usage;
+    } else {
+      usage.innerHTML =
+        'Reference <code>' +
+        item.variable +
+        '</code> in your deployment script wherever you need to access this value.';
+    }
+    usageGroup.appendChild(usageLabel);
+    usageGroup.appendChild(usage);
+    variableDetailEl.appendChild(usageGroup);
+  }
+
   function renderVariableHelper() {
     if (!variableResultsEl) return;
     const term = (variableSearchEl?.value || '').trim().toLowerCase();
@@ -122,105 +223,59 @@
         ? 'No variables match your search.'
         : 'Variable reference is unavailable.';
       variableResultsEl.appendChild(empty);
+      activeVariableKey = null;
+      activeVariableButton = null;
+      setVariableDetail(
+        term ? 'No variables match your search.' : 'Select a variable to see details.',
+      );
       return;
     }
 
-    sections.forEach((section, idx) => {
-      const details = document.createElement('details');
-      details.className = 'variable-section';
-      if (term || idx === 0) details.open = true;
+    let selectionFound = false;
 
-      const summary = document.createElement('summary');
-      summary.className = 'variable-section-header';
+    sections.forEach((section) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'variable-section';
+
+      const header = document.createElement('div');
+      header.className = 'variable-section-header';
       const titleSpan = document.createElement('span');
       titleSpan.textContent = section.title || 'Section';
       const countSpan = document.createElement('span');
       countSpan.className = 'variable-pill';
       countSpan.textContent = section.matches.length;
-      summary.appendChild(titleSpan);
-      summary.appendChild(countSpan);
-      details.appendChild(summary);
+      header.appendChild(titleSpan);
+      header.appendChild(countSpan);
+      wrap.appendChild(header);
 
       const body = document.createElement('div');
       body.className = 'variable-section-body';
       section.matches.forEach((item) => {
-        const entry = document.createElement('details');
-        entry.className = 'variable-entry';
-        if (term) entry.open = true;
-
-        const summary = document.createElement('summary');
-        summary.className = 'variable-entry-summary';
-        const code = document.createElement('code');
-        code.textContent = item.variable;
-        summary.appendChild(code);
-        entry.appendChild(summary);
-
-        const entryBody = document.createElement('div');
-        entryBody.className = 'variable-entry-body';
-
-        const descGroup = document.createElement('div');
-        descGroup.className = 'variable-meta';
-        const descLabel = document.createElement('span');
-        descLabel.className = 'variable-meta-label';
-        descLabel.textContent = 'Description';
-        const desc = document.createElement('p');
-        desc.className = 'variable-description';
-        desc.textContent = item.description || 'No description available.';
-        descGroup.appendChild(descLabel);
-        descGroup.appendChild(desc);
-
-        const usageGroup = document.createElement('div');
-        usageGroup.className = 'variable-meta';
-        const usageLabel = document.createElement('span');
-        usageLabel.className = 'variable-meta-label';
-        usageLabel.textContent = 'How to use';
-        const usage = document.createElement('p');
-        usage.className = 'variable-usage';
-        if (item.usage) {
-          usage.innerHTML = item.usage;
-        } else {
-          usage.innerHTML =
-            'Reference <code>' +
-            item.variable +
-            '</code> in your deployment script wherever you need to access this value.';
-        }
-        usageGroup.appendChild(usageLabel);
-        usageGroup.appendChild(usage);
-
-        const actions = document.createElement('div');
-        actions.className = 'variable-entry-actions';
+        const key = `${section.id || section.title || 'section'}::${item.variable}`;
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'variable-copy-btn';
-        btn.setAttribute('aria-label', `Copy ${item.variable}`);
-        btn.innerHTML =
-          '<svg class="icon"><use href="#ic-copy"></use></svg><span>Copy</span>';
-        btn.addEventListener('click', async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const success = await copyText(item.variable);
-          if (success) {
-            btn.classList.add('copied');
-            const span = btn.querySelector('span');
-            if (span) span.textContent = 'Copied!';
-            setTimeout(() => {
-              btn.classList.remove('copied');
-              if (span) span.textContent = 'Copy';
-            }, 1200);
-          }
+        btn.className = 'variable-item';
+        btn.textContent = item.variable;
+        if (key === activeVariableKey) {
+          btn.classList.add('active');
+          activeVariableButton = btn;
+          selectionFound = true;
+        }
+        btn.addEventListener('click', () => {
+          showVariableDetail(item, section, key, btn);
         });
-        actions.appendChild(btn);
-
-        entryBody.appendChild(descGroup);
-        entryBody.appendChild(usageGroup);
-        entryBody.appendChild(actions);
-        entry.appendChild(entryBody);
-        body.appendChild(entry);
+        body.appendChild(btn);
       });
 
-      details.appendChild(body);
-      variableResultsEl.appendChild(details);
+      wrap.appendChild(body);
+      variableResultsEl.appendChild(wrap);
     });
+
+    if (activeVariableKey && !selectionFound) {
+      activeVariableKey = null;
+      activeVariableButton = null;
+      setVariableDetail('Select a variable to see details.');
+    }
   }
 
   if (variableResultsEl) {
