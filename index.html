@@ -315,6 +315,34 @@
             </select>
           </div>
         </div>
+        <div class="card variable-card">
+          <h3 class="card-title">
+            <svg class="icon"><use href="#ic-files" /></svg
+            ><span>Variable Helper</span>
+          </h3>
+          <p class="variable-hint">
+            Based on the
+            <a
+              href="https://psappdeploytoolkit.com/docs/reference/variables"
+              target="_blank"
+              rel="noreferrer"
+              >PSADT 4.1 variable reference</a
+            >.
+            <span id="variable-count" class="variable-count" aria-live="polite"></span>
+          </p>
+          <input
+            type="search"
+            id="variable-search"
+            class="variable-search"
+            placeholder="Search variables"
+            aria-label="Search variables"
+          />
+          <div
+            id="variable-results"
+            class="variable-results"
+            aria-live="polite"
+          ></div>
+        </div>
       </aside>
     </main>
 
@@ -336,6 +364,7 @@
     <script src="src/js/telemetry.js"></script>
     <script src="src/js/commands.js"></script>
     <script src="src/js/state.js"></script>
+    <script src="src/js/variables.js"></script>
     <script src="src/js/main.js"></script>
     <script src="src/js/editor.js"></script>
   </body>
