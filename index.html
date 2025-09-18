@@ -89,6 +89,14 @@
           <span class="nav-toggle-label">Menu</span>
         </button>
         <div class="header-menu" data-nav-menu>
+          <div class="header-theme" role="group" aria-label="Theme">
+            <svg class="icon" aria-hidden="true"><use href="#ic-theme" /></svg>
+            <label class="header-theme-label" for="header-color-mode">Theme</label>
+            <select id="header-color-mode" class="header-theme-select">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
           <nav
             class="header-links"
             id="primary-nav"
@@ -314,132 +322,6 @@
             </section>
 
             <aside class="tools" aria-label="Tools">
-              <div class="card">
-                <h3 class="card-title">
-                  <svg class="icon"><use href="#ic-theme" /></svg><span>Theme</span>
-                </h3>
-                <div class="theme-picker" title="Choose accent color">
-                  <span class="theme-label">Accent</span>
-                  <div
-                    class="swatches"
-                    id="accent-swatches"
-                    aria-label="Accent presets"
-                  >
-                    <button
-                      class="swatch"
-                      data-color="#175BEB"
-                      style="--c: #175beb"
-                      aria-label="Brand Blue"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#4776E6"
-                      style="--c: #4776e6"
-                      aria-label="Blue"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#8E54E9"
-                      style="--c: #8e54e9"
-                      aria-label="Violet"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#EC008C"
-                      style="--c: #ec008c"
-                      aria-label="Magenta"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#FFC225"
-                      style="--c: #ffc225"
-                      aria-label="Gold"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#1FB381"
-                      style="--c: #1fb381"
-                      aria-label="Green"
-                    ></button>
-                  </div>
-                  <input
-                    id="accent"
-                    class="accent"
-                    type="color"
-                    value="#175BEB"
-                    aria-label="Custom accent color"
-                  />
-                </div>
-                <div
-                  class="theme-picker"
-                  title="Choose background color"
-                  style="margin-top: 8px"
-                >
-                  <span class="theme-label">Background</span>
-                  <div
-                    class="swatches"
-                    id="bg-swatches"
-                    aria-label="Background presets"
-                  >
-                    <button
-                      class="swatch"
-                      data-color="#FAF8FF"
-                      style="--c: #faf8ff"
-                      aria-label="Cloudcook Base"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#FFFFFF"
-                      style="--c: #ffffff"
-                      aria-label="White"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#E9E8FF"
-                      style="--c: #e9e8ff"
-                      aria-label="Lavender"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#FFFDF7"
-                      style="--c: #fffdf7"
-                      aria-label="Ivory"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#F6F6FF"
-                      style="--c: #f6f6ff"
-                      aria-label="Mist"
-                    ></button>
-                    <button
-                      class="swatch"
-                      data-color="#F3F1FE"
-                      style="--c: #f3f1fe"
-                      aria-label="Lilac"
-                    ></button>
-                  </div>
-                  <input
-                    id="background"
-                    class="accent"
-                    type="color"
-                    value="#FAF8FF"
-                    aria-label="Custom background color"
-                  />
-                </div>
-                <div
-                  class="theme-picker"
-                  title="Choose color mode"
-                  style="margin-top: 8px"
-                >
-                  <span class="theme-label">Mode</span>
-                  <select id="color-mode" aria-label="Color mode">
-                    <option value="auto">Auto</option>
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                    <option value="hc">High Contrast</option>
-                  </select>
-                </div>
-              </div>
               <details
                 class="card panel variable-card"
                 id="variable-panel"

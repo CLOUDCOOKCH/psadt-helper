@@ -30,7 +30,7 @@
   const swatchesEl = document.getElementById('accent-swatches');
   const bgEl = document.getElementById('background');
   const bgSwatchesEl = document.getElementById('bg-swatches');
-  const modeSel = document.getElementById('color-mode');
+  const modeSel = document.getElementById('header-color-mode');
   const telemetryToggle = document.getElementById('telemetry-toggle');
   const cacheToggle = document.getElementById('cache-toggle');
   const builderTrigger = document.querySelector('[data-open-builder]');
@@ -196,22 +196,28 @@
   });
 
   function applyMode(mode) {
-    document.documentElement.removeAttribute('data-theme');
-    if (mode === 'dark' || mode === 'hc') {
-      document.documentElement.setAttribute('data-theme', mode);
+    if (mode === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      return;
     }
+    document.documentElement.removeAttribute('data-theme');
   }
   if (modeSel) {
     const prefersDark = window.matchMedia(
       '(prefers-color-scheme: dark)',
     ).matches;
-    const saved = localStorage.getItem('color-mode') || 'auto';
-    modeSel.value = saved;
-    applyMode(saved === 'auto' ? (prefersDark ? 'dark' : 'light') : saved);
+    const saved = localStorage.getItem('color-mode');
+    const initial = saved === 'dark' || saved === 'light'
+      ? saved
+      : prefersDark
+        ? 'dark'
+        : 'light';
+    modeSel.value = initial;
+    applyMode(initial);
     modeSel.addEventListener('change', (e) => {
-      const val = e.target.value;
+      const val = e.target.value === 'dark' ? 'dark' : 'light';
       localStorage.setItem('color-mode', val);
-      applyMode(val === 'auto' ? (prefersDark ? 'dark' : 'light') : val);
+      applyMode(val);
     });
   }
 

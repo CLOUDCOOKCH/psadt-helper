@@ -35,7 +35,7 @@ const baseMarkup = `
       <div id="accent-swatches"></div>
       <input id="background" />
       <div id="bg-swatches"></div>
-      <select id="color-mode"></select>
+      <select id="header-color-mode"></select>
       <label for="telemetry-toggle"></label>
       <input type="checkbox" id="telemetry-toggle" />
       <div class="variable-card">
