@@ -4,6 +4,7 @@
   const searchEl = document.getElementById('scenario-search');
   const detailsEl = document.getElementById('scenario-details');
   const commandEl = document.getElementById('command');
+  const commandSearchEl = document.getElementById('command-search');
   const outputEl = document.getElementById('output');
   const introEl = document.getElementById('intro');
   const copyBtn = document.getElementById('copy-btn');
@@ -32,6 +33,8 @@
   const modeSel = document.getElementById('color-mode');
   const telemetryToggle = document.getElementById('telemetry-toggle');
   const cacheToggle = document.getElementById('cache-toggle');
+  const builderTrigger = document.querySelector('[data-open-builder]');
+  const startScenarioLink = document.querySelector('a[href="#scenario-search"]');
   if (telemetryToggle) {
     telemetryToggle.addEventListener('change', (e) =>
       setTelemetry(e.target.checked),
@@ -54,6 +57,89 @@
         .catch((error) => console.error(error));
     });
   }
+  const panelRegistry = new Map();
+  const PANEL_FOCUSABLE_SELECTOR =
+    'a[href], button:not([disabled]), textarea, input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  function registerPanel(panel) {
+    if (!(panel instanceof HTMLDetailsElement)) return;
+    const id = panel.id || `panel-${panelRegistry.size + 1}`;
+    panelRegistry.set(id, panel);
+  }
+
+  function expandPanel(target, options = {}) {
+    const { scroll = true, focusSelector, focusFirst = false } = options;
+    const panel =
+      typeof target === 'string' ? panelRegistry.get(target) : target;
+    if (!panel || !(panel instanceof HTMLDetailsElement)) return null;
+    if (!panel.open) {
+      panel.open = true;
+    }
+    if (scroll) {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    let focusTarget = null;
+    if (focusSelector) {
+      focusTarget = panel.querySelector(focusSelector);
+    } else if (focusFirst) {
+      focusTarget = panel.querySelector(PANEL_FOCUSABLE_SELECTOR);
+    }
+    if (focusTarget && typeof focusTarget.focus === 'function') {
+      setTimeout(() => focusTarget.focus(), 160);
+    }
+    return panel;
+  }
+
+  document.querySelectorAll('[data-panel]').forEach((panel) => {
+    registerPanel(panel);
+  });
+
+  window.psadtPanels = Object.freeze({
+    expand: (target, options) => expandPanel(target, options),
+  });
+
+  const builderPanel = panelRegistry.get('builder');
+
+  if (builderTrigger && builderPanel) {
+    builderTrigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      expandPanel(builderPanel, {
+        focusSelector: '#command-search',
+      });
+      if (history.replaceState) {
+        history.replaceState(null, '', '#builder');
+      } else {
+        location.hash = '#builder';
+      }
+    });
+  }
+
+  if (commandSearchEl && builderPanel) {
+    commandSearchEl.addEventListener('focus', () =>
+      expandPanel(builderPanel, { scroll: false }),
+    );
+  }
+
+  if (startScenarioLink && searchEl) {
+    startScenarioLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      searchEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => {
+        if (typeof searchEl.focus === 'function') {
+          try {
+            searchEl.focus({ preventScroll: true });
+          } catch (err) {
+            searchEl.focus();
+          }
+        }
+      }, 180);
+    });
+  }
+
+  if (location.hash === '#builder' && builderPanel) {
+    expandPanel(builderPanel, { scroll: false });
+  }
+
   document.querySelectorAll('img[data-hide-on-error]').forEach((img) => {
     img.addEventListener('error', () => img.classList.add('hidden'));
   });
@@ -417,6 +503,9 @@
     const rerenderVariables = () => renderVariableHelper();
     variableSearchEl.addEventListener('input', rerenderVariables);
     variableSearchEl.addEventListener('search', rerenderVariables);
+    variableSearchEl.addEventListener('focus', () =>
+      expandPanel('variable-panel', { scroll: false, focusSelector: '#variable-search' }),
+    );
   }
 
   const initialState = new URLSearchParams(location.hash.slice(1));
