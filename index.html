@@ -143,7 +143,10 @@
                 <a href="#scenario-search" class="btn btn-primary"
                   >Start building</a
                 >
-                <a href="#builder" class="btn btn-ghost"
+                <a
+                  href="#builder"
+                  class="btn btn-ghost"
+                  data-open-builder
                   >Open command builder</a
                 >
               </div>
@@ -230,36 +233,47 @@
           </div>
           <div id="script-commands" aria-live="polite"></div>
         </div>
-        <div id="builder" class="card">
-          <div class="output-toolbar">
-            <span class="output-title">Command Builder</span>
+        <details id="builder" class="card panel" data-panel>
+          <summary class="panel-header">
+            <div class="panel-title">
+              <span class="panel-title-label">Command Builder</span>
+              <span class="panel-title-hint">Compose reusable PSADT snippets</span>
+            </div>
+            <span class="panel-toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="panel-body" data-panel-body>
+            <div class="panel-body-content">
+              <label class="visually-hidden" for="command-search"
+                >Search commands</label
+              >
+              <input
+                type="search"
+                id="command-search"
+                class="cmd-search"
+                placeholder="Search commands"
+                aria-label="Search commands"
+              />
+              <div
+                id="command-boxes"
+                class="cmd-boxes"
+                aria-label="PSADT commands"
+              ></div>
+              <div
+                id="command-detail"
+                class="cmd-detail empty"
+                aria-live="polite"
+              >
+                <p>Select a command to view parameters.</p>
+              </div>
+              <div
+                id="editor-area"
+                class="cmd-editor"
+                contenteditable="true"
+                aria-label="Custom script editor"
+              ></div>
+            </div>
           </div>
-          <input
-            type="search"
-            id="command-search"
-            class="cmd-search"
-            placeholder="Search commands"
-            aria-label="Search commands"
-          />
-          <div
-            id="command-boxes"
-            class="cmd-boxes"
-            aria-label="PSADT commands"
-          ></div>
-          <div
-            id="command-detail"
-            class="cmd-detail empty"
-            aria-live="polite"
-          >
-            <p>Select a command to view parameters.</p>
-          </div>
-          <div
-            id="editor-area"
-            class="cmd-editor"
-            contenteditable="true"
-            aria-label="Custom script editor"
-          ></div>
-        </div>
+        </details>
         <div id="empty" class="empty">
           <p>Select a scenario to begin.</p>
         </div>
@@ -392,41 +406,59 @@
             </select>
           </div>
         </div>
-        <div class="card variable-card">
-          <h3 class="card-title">
-            <svg class="icon"><use href="#ic-files" /></svg
-            ><span>Variable Helper</span>
-          </h3>
-          <p class="variable-hint">
-            Based on the
-            <a
-              href="https://psappdeploytoolkit.com/docs/reference/variables"
-              target="_blank"
-              rel="noreferrer"
-              >PSADT 4.1 variable reference</a
-            >.
-            <span id="variable-count" class="variable-count" aria-live="polite"></span>
-          </p>
-          <div class="variable-search">
-            <input
-              type="search"
-              id="variable-search"
-              class="variable-search-input"
-              placeholder="Search variables"
-              aria-label="Search variables"
-            />
-          </div>
-          <div class="variable-helper">
-            <div id="variable-results" class="variable-results"></div>
-            <div
-              id="variable-detail"
-              class="variable-detail empty"
-              aria-live="polite"
-            >
-              <p class="variable-empty">Select a variable to see details.</p>
+        <details
+          class="card panel variable-card"
+          id="variable-panel"
+          data-panel
+        >
+          <summary class="panel-header">
+            <div class="panel-title">
+              <span class="panel-title-label">Variable Helper</span>
+              <span class="panel-title-hint">Reference PSADT runtime variables</span>
+            </div>
+            <span class="panel-toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="panel-body" data-panel-body>
+            <div class="panel-body-content">
+              <p class="variable-hint">
+                Based on the
+                <a
+                  href="https://psappdeploytoolkit.com/docs/reference/variables"
+                  target="_blank"
+                  rel="noreferrer"
+                  >PSADT 4.1 variable reference</a
+                >.
+                <span
+                  id="variable-count"
+                  class="variable-count"
+                  aria-live="polite"
+                ></span>
+              </p>
+              <div class="variable-search">
+                <label class="visually-hidden" for="variable-search"
+                  >Search variables</label
+                >
+                <input
+                  type="search"
+                  id="variable-search"
+                  class="variable-search-input"
+                  placeholder="Search variables"
+                  aria-label="Search variables"
+                />
+              </div>
+              <div class="variable-helper">
+                <div id="variable-results" class="variable-results"></div>
+                <div
+                  id="variable-detail"
+                  class="variable-detail empty"
+                  aria-live="polite"
+                >
+                  <p class="variable-empty">Select a variable to see details.</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </details>
       </aside>
     </main>
 
