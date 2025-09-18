@@ -1,0 +1,24 @@
+{
+  "name": "Cloudcook PSADT Helper",
+  "short_name": "PSADT Helper",
+  "description": "Curated tooling for building PSAppDeployToolkit deployment scripts.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#175beb",
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "assets/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "assets/app-icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
