@@ -21,6 +21,9 @@
   const variableResultsEl = document.getElementById('variable-results');
   const variableDetailEl = document.getElementById('variable-detail');
   const variableCountEl = document.getElementById('variable-count');
+  const variableModalEl = document.getElementById('variable-modal');
+  const variableModalBodyEl = document.getElementById('variable-modal-body');
+  const variableModalCloseEl = document.getElementById('variable-modal-close');
   const accentEl = document.getElementById('accent');
   const swatchesEl = document.getElementById('accent-swatches');
   const bgEl = document.getElementById('background');
@@ -72,6 +75,29 @@
       : '';
   }
 
+  function createVariableCopyButton(variableName) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'variable-copy-btn';
+    btn.setAttribute('aria-label', `Copy ${variableName}`);
+    btn.innerHTML =
+      '<svg class="icon"><use href="#ic-copy"></use></svg><span>Copy</span>';
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const success = await copyText(variableName);
+      if (success) {
+        btn.classList.add('copied');
+        const span = btn.querySelector('span');
+        if (span) span.textContent = 'Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          if (span) span.textContent = 'Copy';
+        }, 1200);
+      }
+    });
+    return btn;
+  }
+
   async function copyText(text) {
     if (!text) return false;
     try {
@@ -98,33 +124,16 @@
 
   let activeVariableKey = null;
   let activeVariableButton = null;
+  let lastFocusBeforeModal = null;
 
-  function setVariableDetail(message) {
-    if (!variableDetailEl) return;
-    variableDetailEl.classList.add('empty');
-    variableDetailEl.innerHTML = '';
-    const empty = document.createElement('p');
-    empty.className = 'variable-empty';
-    empty.textContent = message;
-    variableDetailEl.appendChild(empty);
-  }
-
-  function showVariableDetail(item, section, key, button) {
-    if (!variableDetailEl) return;
-    if (activeVariableButton && activeVariableButton !== button) {
-      activeVariableButton.classList.remove('active');
-    }
-    if (button) {
-      button.classList.add('active');
-      activeVariableButton = button;
-    }
-    activeVariableKey = key;
-
-    variableDetailEl.classList.remove('empty');
-    variableDetailEl.innerHTML = '';
+  function buildVariableDetailFragment(item, section, options = {}) {
+    const fragment = document.createDocumentFragment();
 
     const header = document.createElement('div');
     header.className = 'variable-detail-header';
+    if (options.headerId) {
+      header.id = options.headerId;
+    }
 
     const titleGroup = document.createElement('div');
     titleGroup.className = 'variable-detail-title';
@@ -141,28 +150,9 @@
 
     const actions = document.createElement('div');
     actions.className = 'variable-detail-actions';
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'variable-copy-btn';
-    btn.setAttribute('aria-label', `Copy ${item.variable}`);
-    btn.innerHTML =
-      '<svg class="icon"><use href="#ic-copy"></use></svg><span>Copy</span>';
-    btn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const success = await copyText(item.variable);
-      if (success) {
-        btn.classList.add('copied');
-        const span = btn.querySelector('span');
-        if (span) span.textContent = 'Copied!';
-        setTimeout(() => {
-          btn.classList.remove('copied');
-          if (span) span.textContent = 'Copy';
-        }, 1200);
-      }
-    });
-    actions.appendChild(btn);
+    actions.appendChild(createVariableCopyButton(item.variable));
     header.appendChild(actions);
-    variableDetailEl.appendChild(header);
+    fragment.appendChild(header);
 
     const descGroup = document.createElement('div');
     descGroup.className = 'variable-meta';
@@ -174,7 +164,7 @@
     desc.textContent = item.description || 'No description available.';
     descGroup.appendChild(descLabel);
     descGroup.appendChild(desc);
-    variableDetailEl.appendChild(descGroup);
+    fragment.appendChild(descGroup);
 
     const usageGroup = document.createElement('div');
     usageGroup.className = 'variable-meta';
@@ -193,7 +183,90 @@
     }
     usageGroup.appendChild(usageLabel);
     usageGroup.appendChild(usage);
-    variableDetailEl.appendChild(usageGroup);
+    fragment.appendChild(usageGroup);
+
+    return fragment;
+  }
+
+  function closeVariableModal() {
+    if (!variableModalEl) return;
+    if (variableModalEl.classList.contains('hidden')) return;
+    variableModalEl.classList.add('hidden');
+    if (variableModalBodyEl) {
+      variableModalBodyEl.innerHTML = '';
+    }
+    if (lastFocusBeforeModal && typeof lastFocusBeforeModal.focus === 'function') {
+      lastFocusBeforeModal.focus();
+    }
+    lastFocusBeforeModal = null;
+  }
+
+  function openVariableModal(item, section) {
+    if (!variableModalEl || !variableModalBodyEl) return;
+    variableModalBodyEl.innerHTML = '';
+    variableModalBodyEl.appendChild(
+      buildVariableDetailFragment(item, section, {
+        headerId: 'variable-modal-title',
+      }),
+    );
+    variableModalEl.classList.remove('hidden');
+    lastFocusBeforeModal = document.activeElement;
+    if (variableModalCloseEl) {
+      variableModalCloseEl.focus();
+    }
+  }
+
+  if (variableModalEl) {
+    variableModalEl.addEventListener('click', (event) => {
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.hasAttribute('data-modal-dismiss')
+      ) {
+        closeVariableModal();
+      }
+    });
+  }
+
+  if (variableModalCloseEl) {
+    variableModalCloseEl.addEventListener('click', (event) => {
+      event.preventDefault();
+      closeVariableModal();
+    });
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeVariableModal();
+    }
+  });
+
+  function setVariableDetail(message) {
+    if (!variableDetailEl) return;
+    variableDetailEl.classList.add('empty');
+    variableDetailEl.innerHTML = '';
+    const empty = document.createElement('p');
+    empty.className = 'variable-empty';
+    empty.textContent = message;
+    variableDetailEl.appendChild(empty);
+    closeVariableModal();
+  }
+
+  function showVariableDetail(item, section, key, button) {
+    if (!variableDetailEl) return;
+    if (activeVariableButton && activeVariableButton !== button) {
+      activeVariableButton.classList.remove('active');
+    }
+    if (button) {
+      button.classList.add('active');
+      activeVariableButton = button;
+    }
+    activeVariableKey = key;
+
+    variableDetailEl.classList.remove('empty');
+    variableDetailEl.innerHTML = '';
+    variableDetailEl.appendChild(buildVariableDetailFragment(item, section));
+    openVariableModal(item, section);
   }
 
   function renderVariableHelper() {

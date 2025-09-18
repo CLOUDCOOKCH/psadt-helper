@@ -416,6 +416,61 @@ body {
   font-size: 13px;
   color: var(--muted);
 }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--bg) 40%, #000 60%);
+  opacity: 0.7;
+}
+
+.modal-container {
+  position: relative;
+  z-index: 1;
+  background: var(--panel);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  max-width: min(520px, calc(100% - 40px));
+  width: min(520px, calc(100% - 40px));
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text);
+}
+
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 999px;
+}
+
+.modal-close:hover,
+.modal-close:focus-visible {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+  outline: none;
+}
 .full {
   width: 100%;
 }
