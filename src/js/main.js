@@ -144,15 +144,51 @@
       const body = document.createElement('div');
       body.className = 'variable-section-body';
       section.matches.forEach((item) => {
-        const entry = document.createElement('div');
+        const entry = document.createElement('details');
         entry.className = 'variable-entry';
+        if (term) entry.open = true;
 
-        const header = document.createElement('div');
-        header.className = 'variable-entry-header';
+        const summary = document.createElement('summary');
+        summary.className = 'variable-entry-summary';
         const code = document.createElement('code');
         code.textContent = item.variable;
-        header.appendChild(code);
+        summary.appendChild(code);
+        entry.appendChild(summary);
 
+        const entryBody = document.createElement('div');
+        entryBody.className = 'variable-entry-body';
+
+        const descGroup = document.createElement('div');
+        descGroup.className = 'variable-meta';
+        const descLabel = document.createElement('span');
+        descLabel.className = 'variable-meta-label';
+        descLabel.textContent = 'Description';
+        const desc = document.createElement('p');
+        desc.className = 'variable-description';
+        desc.textContent = item.description || 'No description available.';
+        descGroup.appendChild(descLabel);
+        descGroup.appendChild(desc);
+
+        const usageGroup = document.createElement('div');
+        usageGroup.className = 'variable-meta';
+        const usageLabel = document.createElement('span');
+        usageLabel.className = 'variable-meta-label';
+        usageLabel.textContent = 'How to use';
+        const usage = document.createElement('p');
+        usage.className = 'variable-usage';
+        if (item.usage) {
+          usage.innerHTML = item.usage;
+        } else {
+          usage.innerHTML =
+            'Reference <code>' +
+            item.variable +
+            '</code> in your deployment script wherever you need to access this value.';
+        }
+        usageGroup.appendChild(usageLabel);
+        usageGroup.appendChild(usage);
+
+        const actions = document.createElement('div');
+        actions.className = 'variable-entry-actions';
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'variable-copy-btn';
@@ -173,14 +209,12 @@
             }, 1200);
           }
         });
-        header.appendChild(btn);
+        actions.appendChild(btn);
 
-        const desc = document.createElement('p');
-        desc.className = 'variable-description';
-        desc.textContent = item.description || '';
-
-        entry.appendChild(header);
-        entry.appendChild(desc);
+        entryBody.appendChild(descGroup);
+        entryBody.appendChild(usageGroup);
+        entryBody.appendChild(actions);
+        entry.appendChild(entryBody);
         body.appendChild(entry);
       });
 
