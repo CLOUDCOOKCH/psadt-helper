@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint src/js tests/js",
     "fmt": "prettier --write \"src/js/**/*.js\" \"tests/js/**/*.js\"",
-    "test": "jest"
+    "test": "jest",
+    "build:legacy": "node scripts/update-legacy-mapping.js"
   },
   "devDependencies": {
     "eslint": "^8.57.0",

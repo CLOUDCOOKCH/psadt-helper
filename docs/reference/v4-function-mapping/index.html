@@ -80,53 +80,74 @@
         helper that ships with the Cloudcook PSADT Helper PowerShell module. Legacy
         commands on the left are rewritten to the modern names shown on the right.
       </p>
-      <table>
+      <table aria-describedby="function-map-status">
         <thead>
           <tr>
             <th scope="col">3.x Function</th>
             <th scope="col">4.x Function</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td><code>Execute-MSI</code></td>
-            <td><code>Start-ADTMsiProcess</code></td>
-          </tr>
-          <tr>
-            <td><code>Execute-MSP</code></td>
-            <td><code>Start-ADTMspProcess</code></td>
-          </tr>
-          <tr>
-            <td><code>Execute-Process</code></td>
-            <td><code>Start-ADTProcess</code></td>
-          </tr>
-          <tr>
-            <td><code>Show-InstallationWelcome</code></td>
-            <td><code>Show-ADTInstallationWelcome</code></td>
-          </tr>
-          <tr>
-            <td><code>Show-InstallationPrompt</code></td>
-            <td><code>Show-ADTInstallationPrompt</code></td>
-          </tr>
-          <tr>
-            <td><code>Show-InstallationProgress</code></td>
-            <td><code>Show-ADTInstallationProgress</code></td>
-          </tr>
-          <tr>
-            <td><code>Show-InstallationRestartPrompt</code></td>
-            <td><code>Show-ADTInstallationRestartPrompt</code></td>
-          </tr>
-        </tbody>
+        <tbody id="function-map-body"></tbody>
       </table>
+      <p id="function-map-status" role="status" aria-live="polite"></p>
       <div class="notes">
         <p>
           Tip: the PSADT Helper's <strong>Legacy Converter</strong> can also update renamed
           parameters when you paste older scripts into the tool.
         </p>
       </div>
+      <section class="notes" aria-labelledby="legacy-converter-heading">
+        <h2 id="legacy-converter-heading">Legacy Converter module</h2>
+        <p>
+          Prefer running conversions locally? Import <code>LegacyConverter.ps1</code> from the
+          helper repository and use <code>Convert-LegacyCommand</code> or
+          <code>Convert-LegacyDeploymentScript</code> directly in PowerShell.
+        </p>
+        <pre><code>Import-Module ./src/ps/LegacyConverter.ps1
+Convert-LegacyCommand -Command "Execute-Process -Path app.exe"</code></pre>
+        <p>
+          <a class="btn btn-ghost" href="/src/ps/LegacyConverter.ps1">View module source</a>
+        </p>
+      </section>
     </main>
     <footer>
       <a href="/">Back to PSADT Helper</a>
     </footer>
+    <script src="/src/js/legacy-mapping.js"></script>
+    <script>
+      (function () {
+        const tableBody = document.getElementById('function-map-body');
+        const statusEl = document.getElementById('function-map-status');
+        if (!tableBody) {
+          return;
+        }
+        const mapping = (typeof window !== 'undefined' && window.LEGACY_MAPPING) || null;
+        if (!mapping || !Array.isArray(mapping.functionMap) || !mapping.functionMap.length) {
+          if (statusEl) {
+            statusEl.textContent = 'Function mapping data is unavailable.';
+          }
+          return;
+        }
+        const rows = mapping.functionMap
+          .slice()
+          .sort((a, b) => String(a[0]).localeCompare(String(b[0]), undefined, { sensitivity: 'base' }));
+        rows.forEach(pair => {
+          if (!Array.isArray(pair) || pair.length !== 2) {
+            return;
+          }
+          const tr = document.createElement('tr');
+          const legacyCell = document.createElement('td');
+          legacyCell.innerHTML = `<code>${pair[0]}</code>`;
+          const modernCell = document.createElement('td');
+          modernCell.innerHTML = `<code>${pair[1]}</code>`;
+          tr.appendChild(legacyCell);
+          tr.appendChild(modernCell);
+          tableBody.appendChild(tr);
+        });
+        if (statusEl) {
+          statusEl.textContent = `${rows.length} function mappings loaded.`;
+        }
+      })();
+    </script>
   </body>
 </html>

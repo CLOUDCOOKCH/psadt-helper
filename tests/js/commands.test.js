@@ -20,6 +20,11 @@ describe('PSADT commands', () => {
     expect(converted).toBe("Start-ADTMsiProcess -Action Install -FilePath 'app.msi' -ArgumentList '/qn' -LogFileName 'app.log'");
   });
 
+  test('converts renamed helper functions beyond installers', () => {
+    const converted = convertLegacyCommand('Write-Log -Message "Migrating"');
+    expect(converted).toBe('Write-ADTLogEntry -Message "Migrating"');
+  });
+
   test('parameter tokens inside words untouched', () => {
     const tricky = 'NoPath -Pathology -Path';
     expect(convertLegacyCommand(tricky)).toBe('NoPath -Pathology -FilePath');
