@@ -21,6 +21,7 @@
   const variableResultsEl = document.getElementById('variable-results');
   const variableDetailEl = document.getElementById('variable-detail');
   const variableCountEl = document.getElementById('variable-count');
+  const variableSearchEl = document.getElementById('variable-search');
   const variableModalEl = document.getElementById('variable-modal');
   const variableModalBodyEl = document.getElementById('variable-modal-body');
   const variableModalCloseEl = document.getElementById('variable-modal-close');
@@ -69,11 +70,18 @@
       sum + (Array.isArray(section.variables) ? section.variables.length : 0),
     0,
   );
-  if (variableCountEl) {
+  function updateVariableCountDisplay({ matchCount = 0, searching = false } = {}) {
+    if (!variableCountEl) return;
+    if (searching) {
+      const label = matchCount === 1 ? 'match' : 'matches';
+      variableCountEl.textContent = `${matchCount} ${label}`;
+      return;
+    }
     variableCountEl.textContent = totalVariableCount
       ? `${totalVariableCount} variables`
       : '';
   }
+  updateVariableCountDisplay();
 
   function createVariableCopyButton(variableName) {
     const btn = document.createElement('button');
@@ -271,26 +279,52 @@
 
   function renderVariableHelper() {
     if (!variableResultsEl) return;
-    variableResultsEl.innerHTML = '';
 
+    const searchTerm = (variableSearchEl ? variableSearchEl.value : '').trim().toLowerCase();
+    const searching = Boolean(searchTerm);
     const sections = variableData
-      .map((section) => ({
-        ...section,
-        matches: Array.isArray(section.variables) ? section.variables : [],
-      }))
+      .map((section) => {
+        const items = Array.isArray(section.variables) ? section.variables : [];
+        const matches = !searching
+          ? items
+          : items.filter((item) => {
+              const haystack = `${section.title || ''} ${item.variable || ''} ${
+                item.description || ''
+              }`.toLowerCase();
+              return haystack.includes(searchTerm);
+            });
+        return {
+          ...section,
+          matches,
+        };
+      })
       .filter((section) => section.matches.length);
+
+    const matchCount = sections.reduce(
+      (sum, section) => sum + section.matches.length,
+      0,
+    );
+    updateVariableCountDisplay({ matchCount, searching });
+
+    variableResultsEl.innerHTML = '';
 
     if (!sections.length) {
       const empty = document.createElement('p');
       empty.className = 'variable-empty';
-      empty.textContent = 'Variable reference is unavailable.';
+      if (searching && totalVariableCount) {
+        empty.textContent = 'No variables match your search.';
+        setVariableDetail('Adjust your search to explore variable details.');
+      } else {
+        empty.textContent = 'Variable reference is unavailable.';
+        setVariableDetail('Select a variable to see details.');
+      }
       variableResultsEl.appendChild(empty);
       activeVariableKey = null;
       activeVariableButton = null;
-      setVariableDetail('Select a variable to see details.');
       return;
     }
 
+    const previousActiveButton = activeVariableButton;
     let selectionFound = false;
 
     sections.forEach((section) => {
@@ -318,6 +352,17 @@
         btn.textContent = item.variable;
         if (key === activeVariableKey) {
           btn.classList.add('active');
+          if (
+            previousActiveButton &&
+            previousActiveButton !== btn &&
+            document.activeElement === previousActiveButton
+          ) {
+            setTimeout(() => {
+              if (document.contains(btn)) {
+                btn.focus();
+              }
+            }, 0);
+          }
           activeVariableButton = btn;
           selectionFound = true;
         }
@@ -340,6 +385,11 @@
 
   if (variableResultsEl) {
     renderVariableHelper();
+  }
+  if (variableSearchEl) {
+    const rerenderVariables = () => renderVariableHelper();
+    variableSearchEl.addEventListener('input', rerenderVariables);
+    variableSearchEl.addEventListener('search', rerenderVariables);
   }
 
   const initialState = new URLSearchParams(location.hash.slice(1));
