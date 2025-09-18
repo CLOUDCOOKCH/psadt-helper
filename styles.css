@@ -357,6 +357,13 @@ ul {
     box-shadow var(--transition-base), color var(--transition-fast);
 }
 
+.header-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  justify-content: flex-end;
+}
+
 .telemetry-toggle:hover {
   border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border) 55%);
   color: var(--color-text);

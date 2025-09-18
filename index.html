@@ -7,7 +7,10 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:"
     />
+    <meta name="theme-color" content="#0f172a" />
     <title>Cloudcook PSADT Helper</title>
+    <link rel="icon" type="image/svg+xml" href="assets/app-icon.svg" />
+    <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -69,9 +72,14 @@
               <span>Function mapping</span>
             </a>
           </nav>
-          <label for="telemetry-toggle" class="telemetry-toggle"
-            ><input type="checkbox" id="telemetry-toggle" /> Enable telemetry</label
-          >
+          <div class="header-toggles">
+            <label for="telemetry-toggle" class="telemetry-toggle"
+              ><input type="checkbox" id="telemetry-toggle" /> Enable telemetry</label
+            >
+            <label for="cache-toggle" class="telemetry-toggle"
+              ><input type="checkbox" id="cache-toggle" /> Enable offline cache</label
+            >
+          </div>
         </div>
       </div>
     </header>
@@ -443,6 +451,7 @@
     <script src="src/js/commands.js"></script>
     <script src="src/js/state.js"></script>
     <script src="src/js/variables.js"></script>
+    <script src="src/js/sw-registration.js"></script>
     <script src="src/js/main.js"></script>
     <script src="src/js/editor.js"></script>
   </body>
