@@ -273,27 +273,31 @@
                 </summary>
                 <div class="panel-body" data-panel-body>
                   <div class="panel-body-content">
-                    <label class="visually-hidden" for="command-search"
-                      >Search commands</label
-                    >
-                    <input
-                      type="search"
-                      id="command-search"
-                      class="cmd-search"
-                      placeholder="Search commands"
-                      aria-label="Search commands"
-                    />
-                    <div
-                      id="command-boxes"
-                      class="cmd-boxes"
-                      aria-label="PSADT commands"
-                    ></div>
-                    <div
-                      id="command-detail"
-                      class="cmd-detail empty"
-                      aria-live="polite"
-                    >
-                      <p>Select a command to view parameters.</p>
+                    <div class="cmd-layout">
+                      <div class="cmd-library">
+                        <label class="visually-hidden" for="command-search"
+                          >Search commands</label
+                        >
+                        <input
+                          type="search"
+                          id="command-search"
+                          class="cmd-search"
+                          placeholder="Search commands"
+                          aria-label="Search commands"
+                        />
+                        <div
+                          id="command-boxes"
+                          class="cmd-boxes"
+                          aria-label="PSADT commands"
+                        ></div>
+                      </div>
+                      <div
+                        id="command-detail"
+                        class="cmd-detail empty"
+                        aria-live="polite"
+                      >
+                        <p>Select a command to view parameters.</p>
+                      </div>
                     </div>
                     <div
                       id="editor-area"
