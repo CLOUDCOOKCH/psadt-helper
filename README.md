@@ -9,6 +9,22 @@ pwsh ./make.ps1 -Install
 ```
 This installs dependencies, runs JS tests and Pester tests.
 
+## Offline caching & manifest
+
+The site now exposes a Progressive Web App manifest (`manifest.json`) and a
+service worker (`sw.js`) that precaches core assets (HTML, styles, telemetry
+scripts, JSON data, and icons) for offline access. Users can control telemetry
+and caching independently via the toggles in the header: turning off caching
+persists a preference in `localStorage`, unregisters existing service workers,
+and clears `psadt-cache-*` entries.
+
+### Cache busting
+
+Static updates should bump `CACHE_VERSION` in `sw.js`. Doing so creates a new
+cache namespace (`psadt-cache-<version>`), allowing the activation handler to
+discard outdated entries while keeping the offline toggle honouring the stored
+preference.
+
 ## Project Layout
 
 - `src/js` - browser JavaScript modules

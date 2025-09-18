@@ -30,10 +30,28 @@
   const bgSwatchesEl = document.getElementById('bg-swatches');
   const modeSel = document.getElementById('color-mode');
   const telemetryToggle = document.getElementById('telemetry-toggle');
+  const cacheToggle = document.getElementById('cache-toggle');
   if (telemetryToggle) {
     telemetryToggle.addEventListener('change', (e) =>
       setTelemetry(e.target.checked),
     );
+  }
+  if (cacheToggle && window.psadtServiceWorker) {
+    cacheToggle.checked = window.psadtServiceWorker.shouldEnable();
+    if (!('serviceWorker' in navigator)) {
+      cacheToggle.disabled = true;
+      if (cacheToggle.parentElement) {
+        cacheToggle.parentElement.setAttribute(
+          'title',
+          'Offline cache requires service worker support.',
+        );
+      }
+    }
+    cacheToggle.addEventListener('change', (e) => {
+      window.psadtServiceWorker
+        .setPreference(e.target.checked)
+        .catch((error) => console.error(error));
+    });
   }
   document.querySelectorAll('img[data-hide-on-error]').forEach((img) => {
     img.addEventListener('error', () => img.classList.add('hidden'));
