@@ -34,9 +34,18 @@ function toArrayLiteral(input) {
   return items.length ? `@(${items.join(',')})` : '';
 }
 
+function formatBase(baseVar) {
+  const base = baseVar && typeof baseVar === 'string' && baseVar.trim()
+    ? baseVar.trim()
+    : '$adtSession.DirFiles';
+  if (base.startsWith('$(')) return base;
+  if (base.startsWith('$')) return `$(${base})`;
+  return base;
+}
+
 // Build an absolute path using a base variable (e.g., $adtSession.DirFiles)
 function joinPath(baseVar, relPath) {
-  const base = baseVar && typeof baseVar === 'string' ? baseVar : '$adtSession.DirFiles';
+  const base = formatBase(baseVar);
   const rel = String(relPath || '')
     .replace(/`/g, '``')
     .replace(/"/g, '`"');
@@ -46,7 +55,7 @@ function joinPath(baseVar, relPath) {
 // Build an array of absolute paths from a comma/newline list
 function joinPathArray(baseVar, listText) {
   if (!listText) return '';
-  const base = baseVar && typeof baseVar === 'string' ? baseVar : '$adtSession.DirFiles';
+  const base = formatBase(baseVar);
   const items = String(listText)
     .split(/[\n,]/)
     .map(s => s.trim())
