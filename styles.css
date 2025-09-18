@@ -645,7 +645,7 @@ ul {
 
 .hero-layout {
   display: grid;
-  gap: clamp(var(--space-md), 5vw, var(--space-xl));
+  gap: clamp(var(--space-md), 4vw, var(--space-xl));
   grid-template-areas: 'hero' 'scenarios' 'variables';
 }
 
@@ -679,8 +679,8 @@ ul {
 
 @media (min-width: 880px) {
   .hero-layout {
-    grid-template-columns: minmax(0, clamp(220px, 22vw, 280px)) minmax(0, 1fr)
-      minmax(0, clamp(220px, 22vw, 280px));
+    grid-template-columns: minmax(0, clamp(240px, 27vw, 360px)) minmax(0, 1fr)
+      minmax(0, clamp(240px, 27vw, 360px));
     grid-template-areas: 'scenarios hero variables';
     align-items: stretch;
   }
