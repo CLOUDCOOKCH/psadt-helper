@@ -337,11 +337,16 @@
             placeholder="Search variables"
             aria-label="Search variables"
           />
-          <div
-            id="variable-results"
-            class="variable-results"
-            aria-live="polite"
-          ></div>
+          <div class="variable-helper">
+            <div id="variable-results" class="variable-results"></div>
+            <div
+              id="variable-detail"
+              class="variable-detail empty"
+              aria-live="polite"
+            >
+              <p class="variable-empty">Select a variable to see details.</p>
+            </div>
+          </div>
         </div>
       </aside>
     </main>

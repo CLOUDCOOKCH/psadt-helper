@@ -550,21 +550,21 @@ const PSADT_VARIABLES = [
     title: 'Microsoft Office',
     variables: [
       {
-        variable: 'envOfficeBitness',
+        variable: '$envOfficeBitness',
         description:
           'Architecture of current Office installation, e.g. x86 or x64',
       },
       {
-        variable: 'envOfficeChannel',
+        variable: '$envOfficeChannel',
         description: "Current Office Channel, e.g. 'Monthly Enterprise'",
       },
       {
-        variable: 'envOfficeVars',
+        variable: '$envOfficeVars',
         description:
           'Properties of HKLM\\SOFTWARE\\Microsoft\\Office\\ClickToRun\\Configuration',
       },
       {
-        variable: 'envOfficeVersion',
+        variable: '$envOfficeVersion',
         description: 'Microsoft Office version, e.g. 16.0.x.x',
       },
     ],
