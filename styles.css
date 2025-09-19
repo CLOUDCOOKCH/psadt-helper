@@ -38,7 +38,7 @@
   --transition-base: 240ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-collapse: 200ms ease;
 
-  --max-width: 1280px;
+  --max-width: 1560px;
   --page-gutter: clamp(var(--space-sm), 5vw, var(--space-xl));
 
   --color-bg: #f4f6fb;
@@ -822,7 +822,7 @@ ul {
 
 @media (min-width: 900px) {
   .workspace-layout {
-    grid-template-columns: minmax(0, clamp(220px, 28vw, 320px)) minmax(0, 1fr);
+    grid-template-columns: minmax(0, clamp(240px, 32vw, 360px)) minmax(0, 1fr);
     grid-template-areas:
       "scenarios main"
       "tools main";
@@ -832,8 +832,8 @@ ul {
 
 @media (min-width: 1280px) {
   .workspace-layout {
-    grid-template-columns: minmax(0, clamp(240px, 24vw, 320px)) minmax(0, 1fr)
-      minmax(0, clamp(240px, 24vw, 320px));
+    grid-template-columns: minmax(0, clamp(260px, 24vw, 360px)) minmax(0, 1fr)
+      minmax(0, clamp(260px, 24vw, 360px));
     grid-template-areas: "scenarios main tools";
   }
 }
