@@ -142,17 +142,17 @@
                   production-ready commands, pairing automation with human-friendly
                   guidance.
                 </p>
-                <div class="hero-actions">
-                  <a href="#scenario-search" class="btn btn-primary"
-                    >Browse scenarios</a
-                  >
-                  <a href="#builder" class="btn" data-open-builder
-                    >Command builder</a
-                  >
-                  <a href="#variable-panel" class="btn btn-ghost"
-                    >Variable helper</a
-                  >
-                </div>
+              </div>
+              <div class="hero-actions">
+                <a href="#scenario-search" class="btn btn-primary"
+                  >Browse scenarios</a
+                >
+                <a href="#builder" class="btn" data-open-builder
+                  >Command builder</a
+                >
+                <a href="#variable-panel" class="btn btn-ghost"
+                  >Variable helper</a
+                >
               </div>
               <div class="hero-visual" aria-hidden="true">
                 <div class="hero-card">
@@ -174,18 +174,7 @@
       <section class="workspace" aria-label="PSADT workspace">
         <div class="shell">
           <div class="workspace-layout">
-            <aside class="sidebar workspace-scenarios" aria-label="Scenarios">
-              <h3 class="hero-sidebar-title">Scenarios</h3>
-              <input
-                type="search"
-                id="scenario-search"
-                class="scenario-search"
-                placeholder="Search"
-                aria-label="Search scenarios"
-              />
-              <div id="scenario-list"></div>
-            </aside>
-            <section class="content">
+            <section class="workspace-main content">
               <div id="scenario-details" class="card hidden"></div>
               <div id="output" class="card hidden">
                 <div class="output-toolbar">
@@ -289,6 +278,17 @@
                 <p>Select a scenario to begin.</p>
               </div>
             </section>
+            <aside class="sidebar workspace-scenarios" aria-label="Scenarios">
+              <h3 class="hero-sidebar-title">Scenarios</h3>
+              <input
+                type="search"
+                id="scenario-search"
+                class="scenario-search"
+                placeholder="Search"
+                aria-label="Search scenarios"
+              />
+              <div id="scenario-list"></div>
+            </aside>
             <aside class="tools workspace-tools" aria-label="Variable helper">
               <details
                 class="card panel variable-card"
