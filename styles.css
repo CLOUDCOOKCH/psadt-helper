@@ -646,12 +646,42 @@ ul {
 .hero-grid {
   display: grid;
   gap: clamp(var(--space-sm), 3vw, var(--space-md));
-  align-items: center;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "content"
+    "actions"
+    "visual";
+}
+
+.hero-content {
+  grid-area: content;
+}
+
+.hero-actions {
+  grid-area: actions;
+}
+
+.hero-visual {
+  grid-area: visual;
 }
 
 @media (min-width: 900px) {
   .hero-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    grid-template-areas:
+      "content visual"
+      "actions visual";
+    align-items: stretch;
+  }
+
+  .hero-content,
+  .hero-actions {
+    align-self: start;
+  }
+
+  .hero-visual {
+    align-self: center;
   }
 }
 
@@ -771,15 +801,32 @@ ul {
 .workspace-layout {
   display: grid;
   gap: clamp(var(--space-lg), 6vw, var(--space-2xl));
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "main"
+    "scenarios"
+    "tools";
+}
+
+.workspace-main {
+  grid-area: main;
+}
+
+.workspace-scenarios {
+  grid-area: scenarios;
+}
+
+.workspace-tools {
+  grid-area: tools;
 }
 
 @media (min-width: 900px) {
   .workspace-layout {
     grid-template-columns: minmax(0, clamp(220px, 28vw, 320px)) minmax(0, 1fr);
-  }
-
-  .workspace-tools {
-    grid-column: 1 / -1;
+    grid-template-areas:
+      "scenarios main"
+      "tools main";
+    align-items: start;
   }
 }
 
@@ -787,11 +834,7 @@ ul {
   .workspace-layout {
     grid-template-columns: minmax(0, clamp(240px, 24vw, 320px)) minmax(0, 1fr)
       minmax(0, clamp(240px, 24vw, 320px));
-    align-items: start;
-  }
-
-  .workspace-tools {
-    grid-column: auto;
+    grid-template-areas: "scenarios main tools";
   }
 }
 
