@@ -132,13 +132,13 @@ body {
   background: var(--color-bg);
   background-image: radial-gradient(
       110% 110% at 12% -10%,
-      color-mix(in srgb, var(--color-accent) 14%, transparent) 0%,
-      transparent 58%
+      color-mix(in srgb, var(--color-accent) 9%, transparent) 0%,
+      transparent 52%
     ),
     radial-gradient(
       120% 120% at 88% 0%,
-      color-mix(in srgb, var(--color-accent) 10%, transparent) 0%,
-      transparent 64%
+      color-mix(in srgb, var(--color-accent) 7%, transparent) 0%,
+      transparent 60%
     );
   color: var(--color-text);
   font-family: var(--font-sans);
@@ -574,7 +574,7 @@ ul {
  */
 .hero-section {
   position: relative;
-  padding-block: clamp(var(--space-xl), 12vw, var(--space-3xl));
+  padding-block: clamp(var(--space-lg), 8vw, var(--space-2xl));
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--color-bg-alt) 55%, transparent 45%) 0%,
@@ -605,8 +605,8 @@ ul {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: clamp(var(--space-md), 5vw, var(--space-lg));
-  padding: clamp(var(--space-lg), 6vw, var(--space-2xl));
+  gap: clamp(var(--space-sm), 3vw, var(--space-lg));
+  padding: clamp(var(--space-md), 4vw, var(--space-xl));
   border-radius: calc(var(--radius-lg) + 0.5rem);
   background: linear-gradient(150deg,
       color-mix(in srgb, var(--color-surface) 94%, var(--color-accent-soft) 6%) 0%,
@@ -645,7 +645,7 @@ ul {
 
 .hero-layout {
   display: grid;
-  gap: clamp(var(--space-md), 4vw, var(--space-xl));
+  gap: clamp(var(--space-md), 4vw, var(--space-lg));
   grid-template-areas: 'hero' 'scenarios' 'variables';
 }
 
@@ -667,7 +667,7 @@ ul {
 
 .hero-grid {
   display: grid;
-  gap: clamp(var(--space-sm), 4vw, var(--space-lg));
+  gap: clamp(var(--space-sm), 3vw, var(--space-md));
   align-items: center;
 }
 
@@ -743,7 +743,8 @@ ul {
   grid-template-columns: auto 1fr;
   gap: var(--space-sm);
   align-items: center;
-  padding: var(--space-sm) var(--space-md);
+  padding: clamp(var(--space-xs), 2vw, var(--space-sm))
+    clamp(var(--space-sm), 3vw, var(--space-md));
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--color-surface) 96%, transparent 4%);
   border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent 22%);
@@ -821,9 +822,9 @@ ul {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  background: color-mix(in srgb, var(--color-surface) 96%, transparent 4%);
+  background: color-mix(in srgb, var(--color-surface) 97%, transparent 3%);
   border-radius: var(--radius-md);
-  padding: clamp(var(--space-sm), 3vw, var(--space-md));
+  padding: clamp(var(--space-sm), 2.5vw, var(--space-md));
   border: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent 25%);
   box-shadow: var(--shadow-xs);
 }
