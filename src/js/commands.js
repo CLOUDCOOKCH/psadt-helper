@@ -391,6 +391,145 @@ const PSADT_SCENARIOS = [
       return parts.join(' ');
     }
   },
+  {
+    id: 'zip-copy-extract',
+    name: 'Archive: Copy & Extract ZIP',
+    description: 'Copy a ZIP from toolkit files to a temp folder and extract it.',
+    fields: [
+      { id: 'zipPath', label: 'ZIP File', type: 'text', required: true, placeholder: 'package.zip', fileBase: true },
+      { id: 'stagingDir', label: 'Temp Folder (defaults to $env:TEMP)', type: 'text', required: false, placeholder: '$env:TEMP' },
+      { id: 'extractDestination', label: 'Extract Destination', type: 'text', required: true, placeholder: 'C\\Temp\\App' },
+      { id: 'overwrite', label: 'Overwrite existing content', type: 'select', options: ['No','Yes'] },
+      { id: 'cleanup', label: 'Remove ZIP after extraction', type: 'select', options: ['No','Yes'] },
+      { id: 'variableName', label: 'Variable name for staged ZIP', type: 'text', required: false, placeholder: '$zipArchivePath' }
+    ],
+    build: (v) => {
+      const zipName = String(v.zipPath || '').split(/[\\/]/).filter(Boolean).pop();
+      if (!zipName) return '';
+      const variableName = (() => {
+        const candidate = typeof v.variableName === 'string' ? v.variableName.trim() : '';
+        if (/^\$[A-Za-z_][\w]*$/.test(candidate)) return candidate;
+        return '$zipArchivePath';
+      })();
+      const stagingDirRaw = typeof v.stagingDir === 'string' && v.stagingDir.trim()
+        ? v.stagingDir.trim()
+        : '$env:TEMP';
+      const joinBase = /^\$/.test(stagingDirRaw) || stagingDirRaw.startsWith('$(')
+        ? stagingDirRaw
+        : `'${psq(stagingDirRaw)}'`;
+      const lines = [];
+      lines.push(`${variableName} = Join-Path ${joinBase} '${psq(zipName)}'`);
+      const copyParts = [
+        'Copy-ADTFile',
+        `-Path ${joinPath(v.zipPathBase, v.zipPath)}`,
+        `-Destination ${variableName}`
+      ];
+      if (v.overwrite === 'Yes') copyParts.push('-Overwrite');
+      lines.push(copyParts.join(' '));
+      const expandParts = [
+        'Expand-Archive',
+        `-Path ${variableName}`,
+        `-DestinationPath '${psq(v.extractDestination)}'`
+      ];
+      if (v.overwrite === 'Yes') expandParts.push('-Force');
+      lines.push(expandParts.join(' '));
+      if (v.cleanup === 'Yes') {
+        lines.push(`Remove-Item ${variableName} -ErrorAction SilentlyContinue`);
+      }
+      return lines.join('\n');
+    }
+  },
+  {
+    id: 'file-copy-user-profiles',
+    name: 'File: Copy to User Profiles',
+    description: 'Copy-ADTFileToUserProfiles to seed files into each user profile.',
+    fields: [
+      { id: 'paths', label: 'Source File(s) (comma/newline separated)', type: 'text', required: true, placeholder: 'config.json, defaults\\settings.xml', fileBase: true },
+      { id: 'destination', label: 'Destination (relative to selected base)', type: 'text', required: false, placeholder: 'AppData\\Roaming\\Vendor' },
+      { id: 'basePath', label: 'User profile base folder', type: 'select', options: ['Profile','AppData','LocalAppData','Desktop','Documents','StartMenu','Temp','OneDrive','OneDriveCommercial'] },
+      { id: 'recurse', label: 'Recurse subfolders', type: 'select', options: ['No','Yes'] },
+      { id: 'flatten', label: 'Flatten files', type: 'select', options: ['No','Yes'] },
+      { id: 'continueOnError', label: 'Continue on copy errors', type: 'select', options: ['No','Yes'] },
+      { id: 'fileCopyMode', label: 'File copy mode', type: 'select', options: ['', 'Native', 'Robocopy'] },
+      { id: 'robocopyParams', label: 'Robocopy Params (override)', type: 'text', required: false },
+      { id: 'robocopyAdditionalParams', label: 'Robocopy Additional Params (append)', type: 'text', required: false },
+      { id: 'excludeAccounts', label: 'Exclude accounts (comma/newline)', type: 'text', required: false, placeholder: 'DOMAIN\\User1, DOMAIN\\User2' },
+      { id: 'includeSystem', label: 'Include system profiles', type: 'select', options: ['No','Yes'] },
+      { id: 'includeService', label: 'Include service profiles', type: 'select', options: ['No','Yes'] },
+      { id: 'excludeDefault', label: 'Exclude Default User', type: 'select', options: ['No','Yes'] }
+    ],
+    build: (v) => {
+      const pathArray = joinPathArray(v.pathsBase, v.paths);
+      if (!pathArray) return '';
+      const parts = ['Copy-ADTFileToUserProfiles', `-Path ${pathArray}`];
+      if (v.destination) parts.push(`-Destination '${psq(v.destination)}'`);
+      if (v.basePath) parts.push(`-BasePath ${v.basePath}`);
+      if (v.recurse === 'Yes') parts.push('-Recurse');
+      if (v.flatten === 'Yes') parts.push('-Flatten');
+      if (v.continueOnError === 'Yes') parts.push('-ContinueFileCopyOnError');
+      if (v.fileCopyMode) parts.push(`-FileCopyMode ${v.fileCopyMode}`);
+      if (v.robocopyParams) parts.push(`-RobocopyParams '${psq(v.robocopyParams)}'`);
+      if (v.robocopyAdditionalParams) parts.push(`-RobocopyAdditionalParams '${psq(v.robocopyAdditionalParams)}'`);
+      const exclude = toArrayLiteral(v.excludeAccounts);
+      if (exclude) parts.push(`-ExcludeNTAccount ${exclude}`);
+      if (v.includeSystem === 'Yes') parts.push('-IncludeSystemProfiles');
+      if (v.includeService === 'Yes') parts.push('-IncludeServiceProfiles');
+      if (v.excludeDefault === 'Yes') parts.push('-ExcludeDefaultUser');
+      return parts.join(' ');
+    }
+  },
+  {
+    id: 'env-set',
+    name: 'Environment Variable: Set',
+    description: 'Set-ADTEnvironmentVariable to create or update an environment variable.',
+    fields: [
+      { id: 'variable', label: 'Variable Name', type: 'text', required: true, placeholder: 'PATH' },
+      { id: 'value', label: 'Value', type: 'text', required: true, placeholder: 'C\\Tools' },
+      { id: 'target', label: 'Target Scope', type: 'select', options: ['', 'Process', 'User', 'Machine'] }
+    ],
+    build: (v) => {
+      const parts = [
+        'Set-ADTEnvironmentVariable',
+        `-Variable '${psq(v.variable)}'`,
+        `-Value '${psq(v.value)}'`
+      ];
+      if (v.target) parts.push(`-Target ${v.target}`);
+      return parts.join(' ');
+    }
+  },
+  {
+    id: 'shortcut-create',
+    name: 'Shortcut: Create',
+    description: 'New-ADTShortcut to create Start Menu, Desktop, or URL shortcuts.',
+    fields: [
+      { id: 'literalPath', label: 'Shortcut Path (.lnk or .url)', type: 'text', required: true, placeholder: '$envCommonDesktop\\My App.lnk' },
+      { id: 'targetPath', label: 'Target Path or URL', type: 'text', required: true, placeholder: 'C\\Program Files\\MyApp\\App.exe' },
+      { id: 'arguments', label: 'Arguments', type: 'text', required: false, placeholder: '--silent' },
+      { id: 'iconLocation', label: 'Icon Location', type: 'text', required: false, placeholder: 'C\\Program Files\\MyApp\\App.exe' },
+      { id: 'iconIndex', label: 'Icon Index', type: 'number', required: false, placeholder: '0' },
+      { id: 'description', label: 'Description', type: 'text', required: false, placeholder: 'Launch My App' },
+      { id: 'workingDirectory', label: 'Working Directory', type: 'text', required: false, placeholder: 'C\\Program Files\\MyApp' },
+      { id: 'windowStyle', label: 'Window Style', type: 'select', options: ['Normal','Maximized','Minimized'] },
+      { id: 'runAsAdmin', label: 'Run as administrator', type: 'select', options: ['No','Yes'] },
+      { id: 'hotkey', label: 'Hotkey (e.g. CTRL+SHIFT+F)', type: 'text', required: false }
+    ],
+    build: (v) => {
+      const parts = [
+        'New-ADTShortcut',
+        `-LiteralPath '${psq(v.literalPath)}'`,
+        `-TargetPath '${psq(v.targetPath)}'`
+      ];
+      if (v.arguments) parts.push(`-Arguments '${psq(v.arguments)}'`);
+      if (v.iconLocation) parts.push(`-IconLocation '${psq(v.iconLocation)}'`);
+      if (v.iconIndex !== '' && v.iconIndex !== undefined && v.iconIndex !== null) parts.push(`-IconIndex ${Number(v.iconIndex)}`);
+      if (v.description) parts.push(`-Description '${psq(v.description)}'`);
+      if (v.workingDirectory) parts.push(`-WorkingDirectory '${psq(v.workingDirectory)}'`);
+      if (v.windowStyle) parts.push(`-WindowStyle ${v.windowStyle}`);
+      if (v.runAsAdmin === 'Yes') parts.push('-RunAsAdmin');
+      if (v.hotkey) parts.push(`-Hotkey '${psq(v.hotkey)}'`);
+      return parts.join(' ');
+    }
+  },
 
   // Dialogs / UI
   {
