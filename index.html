@@ -181,166 +181,178 @@ Invoke-PSADTScenario 'Silently install vendor updates'
       </section>
 
       <section class="dashboard" aria-label="PSADT workspace">
-        <div class="max-width dashboard-grid">
-          <aside class="dashboard-panel scenario-panel" aria-label="Scenarios">
-            <header class="panel-heading">
-              <h3>Scenario navigator</h3>
-              <p>Search, favorite, and launch curated deployment flows.</p>
-            </header>
-            <label class="field" for="scenario-search">
-              <span class="field-label">Search scenarios</span>
-              <input
-                type="search"
-                id="scenario-search"
-                placeholder="Filter by name or goal"
-                aria-label="Search scenarios"
-              />
-            </label>
-            <div class="scenario-list" id="scenario-list"></div>
-          </aside>
-
-          <section class="dashboard-main">
-            <div id="scenario-details" class="card hidden"></div>
-            <div id="empty" class="empty-state">
-              <div class="empty-content">
-                <h3>Select a scenario to begin</h3>
-                <p>Choose from the library on the left to load guidance and a ready-made command.</p>
+        <div class="max-width workspace-grid">
+          <details class="card panel workspace-panel" id="scenario-panel" data-panel open>
+            <summary class="panel-summary">
+              <div>
+                <span class="panel-title">Scenario navigator</span>
+                <p class="panel-caption">Search, favorite, and launch curated deployment flows.</p>
               </div>
-            </div>
-            <div id="output" class="card hidden">
-              <div class="output-header">
-                <div>
-                  <span class="output-title">Generated command</span>
-                  <p class="output-caption">Share-ready PSADT syntax based on your selections.</p>
-                </div>
-                <div class="output-actions">
-                  <button id="add-btn" class="btn btn-ghost">
-                    <svg class="icon" aria-hidden="true"><use href="#ic-play" /></svg>
-                    <span>Add</span>
-                  </button>
-                  <button id="copy-btn" class="btn">
-                    <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
-                    <span>Copy</span>
-                  </button>
-                  <button id="share-btn" class="btn">
-                    <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
-                    <span>Permalink</span>
-                  </button>
-                  <button id="export-btn" class="btn">
-                    <svg class="icon" aria-hidden="true"><use href="#ic-download" /></svg>
-                    <span>Export</span>
-                  </button>
-                  <button id="import-btn" class="btn">
-                    <svg class="icon" aria-hidden="true"><use href="#ic-files" /></svg>
-                    <span>Import</span>
-                  </button>
-                  <input type="file" id="import-file" accept="application/json" hidden />
-                  <button id="reset-btn" class="btn btn-ghost">
-                    <span>Reset</span>
-                  </button>
-                </div>
-              </div>
-              <pre id="command" class="code" aria-live="polite"></pre>
-            </div>
-            <div id="script" class="card hidden">
-              <div class="output-header">
-                <div>
-                  <span class="output-title">Script</span>
-                  <p class="output-caption">Review the assembled deployment script.</p>
-                </div>
-                <div class="output-actions">
-                  <button id="share-script-btn" class="btn">
-                    <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
-                    <span>Copy Link</span>
-                  </button>
-                  <button id="download-script-btn" class="btn">
-                    <svg class="icon" aria-hidden="true"><use href="#ic-download" /></svg>
-                    <span>Download</span>
-                  </button>
-                  <button id="copy-script-btn" class="btn">
-                    <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
-                    <span>Copy Script</span>
-                  </button>
-                </div>
-              </div>
-              <div id="script-commands" aria-live="polite"></div>
-            </div>
-            <details id="builder" class="card panel" data-panel>
-              <summary class="panel-summary">
-                <div>
-                  <span class="panel-title">Command builder</span>
-                  <p class="panel-caption">Mix and match PSADT functions, parameters, and notes.</p>
-                </div>
-                <span class="panel-toggle" aria-hidden="true"></span>
-              </summary>
-              <div class="panel-body" data-panel-body>
-                <div class="builder-grid">
-                  <div class="builder-library">
-                    <label class="visually-hidden" for="command-search">Search commands</label>
+              <span class="panel-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="panel-body" data-panel-body>
+              <div class="scenario-workspace">
+                <div class="scenario-browser">
+                  <label class="field" for="scenario-search">
+                    <span class="field-label">Search scenarios</span>
                     <input
                       type="search"
-                      id="command-search"
-                      class="builder-search"
-                      placeholder="Search commands"
-                      aria-label="Search commands"
+                      id="scenario-search"
+                      placeholder="Filter by name or goal"
+                      aria-label="Search scenarios"
                     />
-                    <div id="command-boxes" class="builder-boxes" aria-label="PSADT commands"></div>
+                  </label>
+                  <div class="scenario-list" id="scenario-list"></div>
+                </div>
+                <div class="scenario-outputs">
+                  <div id="scenario-details" class="card hidden"></div>
+                  <div id="empty" class="empty-state">
+                    <div class="empty-content">
+                      <h3>Select a scenario to begin</h3>
+                      <p>
+                        Choose from the library on the left to load guidance and a ready-made
+                        command.
+                      </p>
+                    </div>
                   </div>
-                  <div id="command-detail" class="builder-detail empty" aria-live="polite">
-                    <p>Select a command to view parameters.</p>
+                  <div id="output" class="card hidden">
+                    <div class="output-header">
+                      <div>
+                        <span class="output-title">Generated command</span>
+                        <p class="output-caption">
+                          Share-ready PSADT syntax based on your selections.
+                        </p>
+                      </div>
+                      <div class="output-actions">
+                        <button id="add-btn" class="btn btn-ghost">
+                          <svg class="icon" aria-hidden="true"><use href="#ic-play" /></svg>
+                          <span>Add</span>
+                        </button>
+                        <button id="copy-btn" class="btn">
+                          <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
+                          <span>Copy</span>
+                        </button>
+                        <button id="share-btn" class="btn">
+                          <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
+                          <span>Permalink</span>
+                        </button>
+                        <button id="export-btn" class="btn">
+                          <svg class="icon" aria-hidden="true"><use href="#ic-download" /></svg>
+                          <span>Export</span>
+                        </button>
+                        <button id="import-btn" class="btn">
+                          <svg class="icon" aria-hidden="true"><use href="#ic-files" /></svg>
+                          <span>Import</span>
+                        </button>
+                        <input type="file" id="import-file" accept="application/json" hidden />
+                        <button id="reset-btn" class="btn btn-ghost">
+                          <span>Reset</span>
+                        </button>
+                      </div>
+                    </div>
+                    <pre id="command" class="code" aria-live="polite"></pre>
+                  </div>
+                  <div id="script" class="card hidden">
+                    <div class="output-header">
+                      <div>
+                        <span class="output-title">Script</span>
+                        <p class="output-caption">Review the assembled deployment script.</p>
+                      </div>
+                      <div class="output-actions">
+                        <button id="share-script-btn" class="btn">
+                          <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
+                          <span>Copy Link</span>
+                        </button>
+                        <button id="download-script-btn" class="btn">
+                          <svg class="icon" aria-hidden="true"><use href="#ic-download" /></svg>
+                          <span>Download</span>
+                        </button>
+                        <button id="copy-script-btn" class="btn">
+                          <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
+                          <span>Copy Script</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div id="script-commands" aria-live="polite"></div>
                   </div>
                 </div>
-                <div
-                  id="editor-area"
-                  class="builder-editor"
-                  contenteditable="true"
-                  aria-label="Custom script editor"
-                ></div>
               </div>
-            </details>
-          </section>
+            </div>
+          </details>
 
-          <aside class="dashboard-panel utility-panel" aria-label="Variable helper">
-            <details class="card panel" id="variable-panel" data-panel>
-              <summary class="panel-summary">
-                <div>
-                  <span class="panel-title">Variable helper</span>
-                  <p class="panel-caption">Look up runtime variables with descriptions and usage.</p>
-                </div>
-                <span class="panel-toggle" aria-hidden="true"></span>
-              </summary>
-              <div class="panel-body" data-panel-body>
-                <div class="variable-intro">
-                  <p>
-                    Based on the
-                    <a
-                      href="https://psappdeploytoolkit.com/docs/reference/variables"
-                      target="_blank"
-                      rel="noreferrer"
-                      >PSADT 4.1 variable reference</a
-                    >.
-                    <span id="variable-count" class="variable-count" aria-live="polite"></span>
-                  </p>
-                </div>
-                <label class="field" for="variable-search">
-                  <span class="field-label">Search variables</span>
+          <details id="builder" class="card panel workspace-panel" data-panel>
+            <summary class="panel-summary">
+              <div>
+                <span class="panel-title">Command builder</span>
+                <p class="panel-caption">Mix and match PSADT functions, parameters, and notes.</p>
+              </div>
+              <span class="panel-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="panel-body" data-panel-body>
+              <div class="builder-grid">
+                <div class="builder-library">
+                  <label class="visually-hidden" for="command-search">Search commands</label>
                   <input
                     type="search"
-                    id="variable-search"
-                    class="variable-search-input"
-                    placeholder="Search variables"
-                    aria-label="Search variables"
+                    id="command-search"
+                    class="builder-search"
+                    placeholder="Search commands"
+                    aria-label="Search commands"
                   />
-                </label>
-                <div class="variable-layout">
-                  <div id="variable-results" class="variable-results"></div>
-                  <div id="variable-detail" class="variable-detail empty" aria-live="polite">
-                    <p class="variable-empty">Select a variable to see details.</p>
-                  </div>
+                  <div id="command-boxes" class="builder-boxes" aria-label="PSADT commands"></div>
+                </div>
+                <div id="command-detail" class="builder-detail empty" aria-live="polite">
+                  <p>Select a command to view parameters.</p>
                 </div>
               </div>
-            </details>
-          </aside>
+              <div
+                id="editor-area"
+                class="builder-editor"
+                contenteditable="true"
+                aria-label="Custom script editor"
+              ></div>
+            </div>
+          </details>
+
+          <details class="card panel workspace-panel" id="variable-panel" data-panel>
+            <summary class="panel-summary">
+              <div>
+                <span class="panel-title">Variable helper</span>
+                <p class="panel-caption">Look up runtime variables with descriptions and usage.</p>
+              </div>
+              <span class="panel-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="panel-body" data-panel-body>
+              <div class="variable-intro">
+                <p>
+                  Based on the
+                  <a
+                    href="https://psappdeploytoolkit.com/docs/reference/variables"
+                    target="_blank"
+                    rel="noreferrer"
+                    >PSADT 4.1 variable reference</a
+                  >.
+                  <span id="variable-count" class="variable-count" aria-live="polite"></span>
+                </p>
+              </div>
+              <label class="field" for="variable-search">
+                <span class="field-label">Search variables</span>
+                <input
+                  type="search"
+                  id="variable-search"
+                  class="variable-search-input"
+                  placeholder="Search variables"
+                  aria-label="Search variables"
+                />
+              </label>
+              <div class="variable-layout">
+                <div id="variable-results" class="variable-results"></div>
+                <div id="variable-detail" class="variable-detail empty" aria-live="polite">
+                  <p class="variable-empty">Select a variable to see details.</p>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
       </section>
     </main>
