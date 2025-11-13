@@ -15,6 +15,72 @@
   </head>
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header" data-sticky>
+      <div class="max-width header-bar">
+        <a class="site-brand" href="#intro">
+          <span class="site-logo-wrap">
+            <img
+              class="site-logo"
+              src="assets/cloudcook-logo.png"
+              alt="Cloudcook"
+              data-hide-on-error
+            />
+          </span>
+          <span class="brand-text">
+            <span class="brand-title">Cloudcook PSADT Helper</span>
+            <span class="brand-tagline">Intuitive command crafting for PSADT</span>
+          </span>
+        </a>
+        <div class="header-actions">
+          <div class="theme-switcher" role="group" aria-label="Theme">
+            <svg class="icon" aria-hidden="true"><use href="#ic-theme"></use></svg>
+            <label for="header-color-mode" class="theme-label">Theme</label>
+            <select id="header-color-mode" class="theme-select">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="primary-nav"
+            data-nav-toggle
+          >
+            <span class="menu-icon" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <span class="menu-label">Menu</span>
+          </button>
+        </div>
+        <div class="site-menu" data-nav-menu>
+          <nav class="primary-nav" id="primary-nav" aria-label="Primary navigation">
+            <a class="nav-link" href="#intro">Overview</a>
+            <a class="nav-link" href="#scenario-search">Scenarios</a>
+            <a class="nav-link" href="#builder">Command builder</a>
+            <a class="nav-link" href="#variable-panel">Variable helper</a>
+            <a class="nav-link" href="docs/reference/v4-function-mapping/">
+              <svg class="icon" aria-hidden="true"><use href="#ic-files"></use></svg>
+              <span>Function mapping</span>
+            </a>
+          </nav>
+          <div class="menu-preferences">
+            <label for="telemetry-toggle" class="preference">
+              <input type="checkbox" id="telemetry-toggle" />
+              <span class="preference-label">Enable telemetry</span>
+            </label>
+            <label for="cache-toggle" class="preference">
+              <input type="checkbox" id="cache-toggle" />
+              <span class="preference-label">Enable offline cache</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </header>
+
     <!-- SVG Icon Sprite -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
       <symbol id="ic-copy" viewBox="0 0 24 24">
@@ -60,302 +126,230 @@
         />
       </symbol>
     </svg>
-    <header class="app-header" data-sticky>
-      <div class="header-inner shell">
-        <a class="brand" href="#intro">
-          <img
-            class="logo"
-            src="assets/cloudcook-logo.png"
-            alt="Cloudcook"
-            data-hide-on-error
-          />
-          <div class="brand-copy">
-            <h1>Cloudcook PSADT Helper</h1>
-            <span class="brand-subtitle">Deployment toolkit companion</span>
-          </div>
-        </a>
-        <button
-          class="nav-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="primary-nav"
-          data-nav-toggle
-        >
-          <span class="nav-toggle-box" aria-hidden="true">
-            <span class="nav-toggle-bar"></span>
-            <span class="nav-toggle-bar"></span>
-            <span class="nav-toggle-bar"></span>
-          </span>
-          <span class="nav-toggle-label">Menu</span>
-        </button>
-        <div class="header-menu" data-nav-menu>
-          <div class="header-theme" role="group" aria-label="Theme">
-            <svg class="icon" aria-hidden="true"><use href="#ic-theme" /></svg>
-            <label class="header-theme-label" for="header-color-mode">Theme</label>
-            <select id="header-color-mode" class="header-theme-select">
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-          <nav
-            class="header-links"
-            id="primary-nav"
-            aria-label="Primary navigation"
-          >
-            <a class="header-link" href="#intro">Overview</a>
-            <a class="header-link" href="#scenario-search">Scenarios</a>
-            <a class="header-link" href="#builder">Command builder</a>
-            <a class="header-link" href="#variable-panel">Variable helper</a>
-            <a
-              class="header-link"
-              href="docs/reference/v4-function-mapping/"
-            >
-              <svg class="icon" aria-hidden="true"><use href="#ic-files" /></svg>
-              <span>Function mapping</span>
-            </a>
-          </nav>
-          <div class="header-toggles">
-            <label for="telemetry-toggle" class="telemetry-toggle"
-              ><input type="checkbox" id="telemetry-toggle" /> Enable telemetry</label
-            >
-            <label for="cache-toggle" class="telemetry-toggle"
-              ><input type="checkbox" id="cache-toggle" /> Enable offline cache</label
-            >
-          </div>
-        </div>
-      </div>
-    </header>
 
     <main id="main-content" tabindex="-1">
       <section id="intro" class="hero-section">
-        <div class="shell">
-          <div class="hero">
-            <div class="hero-grid">
-              <div class="hero-content">
-                <span class="hero-eyebrow">PSAppDeployToolkit v4 ready</span>
-                <h2>
-                  Ship reliable deployments without the guesswork
-                  <span aria-hidden="true">✨</span>
-                </h2>
-                <p class="hero-copy">
-                  Cloudcook PSADT Helper translates curated packaging scenarios into
-                  production-ready commands, pairing automation with human-friendly
-                  guidance.
-                </p>
+        <div class="max-width hero">
+          <div class="hero-content">
+            <p class="hero-kicker">PSAppDeployToolkit v4 ready</p>
+            <h2 class="hero-title">Build and ship dependable deployments with clarity</h2>
+            <p class="hero-summary">
+              The Cloudcook PSADT Helper blends curated scenarios, smart command
+              composition, and variable insights into a single focused workspace.
+            </p>
+            <div class="hero-actions">
+              <a href="#scenario-search" class="btn btn-primary">Explore scenarios</a>
+              <a href="#builder" class="btn" data-open-builder>Open command builder</a>
+              <a href="#variable-panel" class="btn btn-ghost">Browse variables</a>
+            </div>
+            <dl class="hero-metrics" aria-label="Platform highlights">
+              <div>
+                <dt>Scenario library</dt>
+                <dd>60+ ready-to-run blueprints</dd>
               </div>
-              <div class="hero-actions">
-                <a href="#scenario-search" class="btn btn-primary"
-                  >Browse scenarios</a
-                >
-                <a href="#builder" class="btn" data-open-builder
-                  >Command builder</a
-                >
-                <a href="#variable-panel" class="btn btn-ghost"
-                  >Variable helper</a
-                >
+              <div>
+                <dt>Builder output</dt>
+                <dd>Copy, share, or export instantly</dd>
               </div>
-              <div class="hero-visual" aria-hidden="true">
-                <div class="hero-card">
-                  <img
-                    src="assets/cloudcook-logo.png"
-                    alt=""
-                    class="hero-logo"
-                    data-hide-on-error
-                  />
-                  <p class="hero-stat">60+ curated commands</p>
-                  <p class="hero-hint">Aligned with PSADT best practices.</p>
-                </div>
+              <div>
+                <dt>Variable helper</dt>
+                <dd>Every runtime token explained</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-board">
+              <div class="hero-card">
+                <span class="hero-card-label">Live preview</span>
+                <pre class="hero-card-output">
+Deploy-Application -Action Install
+Show-InstallationWelcome -CloseApps 'Teams, Outlook'
+Invoke-PSADTScenario 'Silently install vendor updates'
+                </pre>
+              </div>
+              <div class="hero-card secondary">
+                <span class="hero-card-label">Why teams use it</span>
+                <ul>
+                  <li>Opinionated guidance that keeps packaging consistent.</li>
+                  <li>One-click exports for release pipelines.</li>
+                  <li>Dark mode and offline cache for field work.</li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="workspace" aria-label="PSADT workspace">
-        <div class="shell">
-          <div class="workspace-layout">
-            <section class="workspace-main content">
-              <div id="scenario-details" class="card hidden"></div>
-              <div id="output" class="card hidden">
-                <div class="output-toolbar">
-                  <span class="output-title">Generated Command</span>
-                  <div style="display: flex; gap: 8px">
-                    <button id="add-btn" class="btn">
-                      <svg class="icon"><use href="#ic-play" /></svg><span>Add</span>
-                    </button>
-                    <button id="copy-btn" class="btn">
-                      <svg class="icon"><use href="#ic-copy" /></svg><span>Copy</span>
-                    </button>
-                    <button id="share-btn" class="btn">
-                      <svg class="icon"><use href="#ic-copy" /></svg
-                      ><span>Permalink</span>
-                    </button>
-                    <button id="export-btn" class="btn">
-                      <svg class="icon"><use href="#ic-download" /></svg
-                      ><span>Export</span>
-                    </button>
-                    <button id="import-btn" class="btn">
-                      <svg class="icon"><use href="#ic-files" /></svg
-                      ><span>Import</span>
-                    </button>
-                    <input
-                      type="file"
-                      id="import-file"
-                      accept="application/json"
-                      hidden
-                    />
-                    <button id="reset-btn" class="btn"><span>Reset</span></button>
-                  </div>
-                </div>
-                <pre id="command" class="code" aria-live="polite"></pre>
-              </div>
-              <div id="script" class="card hidden">
-                <div class="output-toolbar">
-                  <span class="output-title">Script</span>
-                  <div style="display: flex; gap: 8px">
-                    <button id="share-script-btn" class="btn">
-                      <svg class="icon"><use href="#ic-copy" /></svg
-                      ><span>Copy Link</span>
-                    </button>
-                    <button id="download-script-btn" class="btn">
-                      <svg class="icon"><use href="#ic-download" /></svg
-                      ><span>Download</span>
-                    </button>
-                    <button id="copy-script-btn" class="btn">
-                      <svg class="icon"><use href="#ic-copy" /></svg
-                      ><span>Copy Script</span>
-                    </button>
-                  </div>
-                </div>
-                <div id="script-commands" aria-live="polite"></div>
-              </div>
-              <details id="builder" class="card panel" data-panel>
-                <summary class="panel-header">
-                  <div class="panel-title">
-                    <span class="panel-title-label">Command Builder</span>
-                    <span class="panel-title-hint">Compose reusable PSADT snippets</span>
-                  </div>
-                  <span class="panel-toggle" aria-hidden="true"></span>
-                </summary>
-                <div class="panel-body" data-panel-body>
-                  <div class="panel-body-content">
-                    <div class="cmd-layout">
-                      <div class="cmd-library">
-                        <label class="visually-hidden" for="command-search"
-                          >Search commands</label
-                        >
-                        <input
-                          type="search"
-                          id="command-search"
-                          class="cmd-search"
-                          placeholder="Search commands"
-                          aria-label="Search commands"
-                        />
-                        <div
-                          id="command-boxes"
-                          class="cmd-boxes"
-                          aria-label="PSADT commands"
-                        ></div>
-                      </div>
-                      <div
-                        id="command-detail"
-                        class="cmd-detail empty"
-                        aria-live="polite"
-                      >
-                        <p>Select a command to view parameters.</p>
-                      </div>
-                    </div>
-                    <div
-                      id="editor-area"
-                      class="cmd-editor"
-                      contenteditable="true"
-                      aria-label="Custom script editor"
-                    ></div>
-                  </div>
-                </div>
-              </details>
-              <div id="empty" class="empty">
-                <p>Select a scenario to begin.</p>
-              </div>
-            </section>
-            <aside class="sidebar workspace-scenarios" aria-label="Scenarios">
-              <h3 class="hero-sidebar-title">Scenarios</h3>
+      <section class="dashboard" aria-label="PSADT workspace">
+        <div class="max-width dashboard-grid">
+          <aside class="dashboard-panel scenario-panel" aria-label="Scenarios">
+            <header class="panel-heading">
+              <h3>Scenario navigator</h3>
+              <p>Search, favorite, and launch curated deployment flows.</p>
+            </header>
+            <label class="field" for="scenario-search">
+              <span class="field-label">Search scenarios</span>
               <input
                 type="search"
                 id="scenario-search"
-                class="scenario-search"
-                placeholder="Search"
+                placeholder="Filter by name or goal"
                 aria-label="Search scenarios"
               />
-              <div id="scenario-list"></div>
-            </aside>
-            <aside class="tools workspace-tools" aria-label="Variable helper">
-              <details
-                class="card panel variable-card"
-                id="variable-panel"
-                data-panel
-              >
-                <summary class="panel-header">
-                  <div class="panel-title">
-                    <span class="panel-title-label">Variable Helper</span>
-                    <span class="panel-title-hint">Reference PSADT runtime variables</span>
+            </label>
+            <div class="scenario-list" id="scenario-list"></div>
+          </aside>
+
+          <section class="dashboard-main">
+            <div id="scenario-details" class="card hidden"></div>
+            <div id="empty" class="empty-state">
+              <div class="empty-content">
+                <h3>Select a scenario to begin</h3>
+                <p>Choose from the library on the left to load guidance and a ready-made command.</p>
+              </div>
+            </div>
+            <div id="output" class="card hidden">
+              <div class="output-header">
+                <div>
+                  <span class="output-title">Generated command</span>
+                  <p class="output-caption">Share-ready PSADT syntax based on your selections.</p>
+                </div>
+                <div class="output-actions">
+                  <button id="add-btn" class="btn btn-ghost">
+                    <svg class="icon" aria-hidden="true"><use href="#ic-play" /></svg>
+                    <span>Add</span>
+                  </button>
+                  <button id="copy-btn" class="btn">
+                    <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
+                    <span>Copy</span>
+                  </button>
+                  <button id="share-btn" class="btn">
+                    <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
+                    <span>Permalink</span>
+                  </button>
+                  <button id="export-btn" class="btn">
+                    <svg class="icon" aria-hidden="true"><use href="#ic-download" /></svg>
+                    <span>Export</span>
+                  </button>
+                  <button id="import-btn" class="btn">
+                    <svg class="icon" aria-hidden="true"><use href="#ic-files" /></svg>
+                    <span>Import</span>
+                  </button>
+                  <input type="file" id="import-file" accept="application/json" hidden />
+                  <button id="reset-btn" class="btn btn-ghost">
+                    <span>Reset</span>
+                  </button>
+                </div>
+              </div>
+              <pre id="command" class="code" aria-live="polite"></pre>
+            </div>
+            <div id="script" class="card hidden">
+              <div class="output-header">
+                <div>
+                  <span class="output-title">Script</span>
+                  <p class="output-caption">Review the assembled deployment script.</p>
+                </div>
+                <div class="output-actions">
+                  <button id="share-script-btn" class="btn">
+                    <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
+                    <span>Copy Link</span>
+                  </button>
+                  <button id="download-script-btn" class="btn">
+                    <svg class="icon" aria-hidden="true"><use href="#ic-download" /></svg>
+                    <span>Download</span>
+                  </button>
+                  <button id="copy-script-btn" class="btn">
+                    <svg class="icon" aria-hidden="true"><use href="#ic-copy" /></svg>
+                    <span>Copy Script</span>
+                  </button>
+                </div>
+              </div>
+              <div id="script-commands" aria-live="polite"></div>
+            </div>
+            <details id="builder" class="card panel" data-panel>
+              <summary class="panel-summary">
+                <div>
+                  <span class="panel-title">Command builder</span>
+                  <p class="panel-caption">Mix and match PSADT functions, parameters, and notes.</p>
+                </div>
+                <span class="panel-toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="panel-body" data-panel-body>
+                <div class="builder-grid">
+                  <div class="builder-library">
+                    <label class="visually-hidden" for="command-search">Search commands</label>
+                    <input
+                      type="search"
+                      id="command-search"
+                      class="builder-search"
+                      placeholder="Search commands"
+                      aria-label="Search commands"
+                    />
+                    <div id="command-boxes" class="builder-boxes" aria-label="PSADT commands"></div>
                   </div>
-                  <span class="panel-toggle" aria-hidden="true"></span>
-                </summary>
-                <div class="panel-body" data-panel-body>
-                  <div class="panel-body-content">
-                    <p class="variable-hint">
-                      Based on the
-                      <a
-                        href="https://psappdeploytoolkit.com/docs/reference/variables"
-                        target="_blank"
-                        rel="noreferrer"
-                        >PSADT 4.1 variable reference</a
-                      >.
-                      <span
-                        id="variable-count"
-                        class="variable-count"
-                        aria-live="polite"
-                      ></span>
-                    </p>
-                    <div class="variable-search">
-                      <label class="visually-hidden" for="variable-search"
-                        >Search variables</label
-                      >
-                      <input
-                        type="search"
-                        id="variable-search"
-                        class="variable-search-input"
-                        placeholder="Search variables"
-                        aria-label="Search variables"
-                      />
-                    </div>
-                    <div class="variable-helper">
-                      <div id="variable-results" class="variable-results"></div>
-                      <div
-                        id="variable-detail"
-                        class="variable-detail empty"
-                        aria-live="polite"
-                      >
-                        <p class="variable-empty">Select a variable to see details.</p>
-                      </div>
-                    </div>
+                  <div id="command-detail" class="builder-detail empty" aria-live="polite">
+                    <p>Select a command to view parameters.</p>
                   </div>
                 </div>
-              </details>
-            </aside>
-          </div>
+                <div
+                  id="editor-area"
+                  class="builder-editor"
+                  contenteditable="true"
+                  aria-label="Custom script editor"
+                ></div>
+              </div>
+            </details>
+          </section>
+
+          <aside class="dashboard-panel utility-panel" aria-label="Variable helper">
+            <details class="card panel" id="variable-panel" data-panel>
+              <summary class="panel-summary">
+                <div>
+                  <span class="panel-title">Variable helper</span>
+                  <p class="panel-caption">Look up runtime variables with descriptions and usage.</p>
+                </div>
+                <span class="panel-toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="panel-body" data-panel-body>
+                <div class="variable-intro">
+                  <p>
+                    Based on the
+                    <a
+                      href="https://psappdeploytoolkit.com/docs/reference/variables"
+                      target="_blank"
+                      rel="noreferrer"
+                      >PSADT 4.1 variable reference</a
+                    >.
+                    <span id="variable-count" class="variable-count" aria-live="polite"></span>
+                  </p>
+                </div>
+                <label class="field" for="variable-search">
+                  <span class="field-label">Search variables</span>
+                  <input
+                    type="search"
+                    id="variable-search"
+                    class="variable-search-input"
+                    placeholder="Search variables"
+                    aria-label="Search variables"
+                  />
+                </label>
+                <div class="variable-layout">
+                  <div id="variable-results" class="variable-results"></div>
+                  <div id="variable-detail" class="variable-detail empty" aria-live="polite">
+                    <p class="variable-empty">Select a variable to see details.</p>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </aside>
         </div>
       </section>
     </main>
 
-    <footer class="footer">
-      <div class="shell footer-inner">
+    <footer class="site-footer">
+      <div class="max-width footer-content">
         <span>Cloudcook PSADT Helper</span>
         <span aria-hidden="true">·</span>
-        <a href="https://psappdeploytoolkit.com/" target="_blank" rel="noreferrer"
-          >PSADT Docs</a
-        >
+        <a href="https://psappdeploytoolkit.com/" target="_blank" rel="noreferrer">PSADT Docs</a>
         <span aria-hidden="true">·</span>
         <a
           href="https://github.com/PSAppDeployToolkit/PSAppDeployToolkit"
@@ -366,13 +360,7 @@
       </div>
     </footer>
 
-    <div
-      id="variable-modal"
-      class="modal hidden"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="variable-modal-title"
-    >
+    <div id="variable-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="variable-modal-title">
       <div class="modal-overlay" data-modal-dismiss></div>
       <div class="modal-container" role="document">
         <button
