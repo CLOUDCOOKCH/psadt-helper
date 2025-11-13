@@ -142,8 +142,19 @@
     return panel;
   }
 
-  document.querySelectorAll('[data-panel]').forEach((panel) => {
+  const panels = Array.from(document.querySelectorAll('[data-panel]'));
+
+  panels.forEach((panel) => {
     registerPanel(panel);
+    panel.addEventListener('toggle', () => {
+      if (!panel.open) return;
+      panels.forEach((other) => {
+        if (other === panel) return;
+        if (other.open) {
+          other.open = false;
+        }
+      });
+    });
   });
 
   window.psadtPanels = Object.freeze({
